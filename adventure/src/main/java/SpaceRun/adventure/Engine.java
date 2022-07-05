@@ -6,7 +6,7 @@
 package SpaceRun.adventure;
 
 import static com.sun.tools.javac.util.StringUtils.toUpperCase;
-import SpaceRun.adventure.games.FireHouseGame;
+import SpaceRun.adventure.games.SpaceRun;
 import SpaceRun.adventure.parser.Parser;
 import SpaceRun.adventure.parser.ParserOutput;
 import SpaceRun.adventure.type.CommandType;
@@ -73,7 +73,7 @@ public class Engine {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Engine engine = new Engine(new FireHouseGame());
+        Engine engine = new Engine(new SpaceRun());
         engine.execute();
     }
 

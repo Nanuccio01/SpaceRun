@@ -14,13 +14,11 @@ import SpaceRun.adventure.type.Command;
 import SpaceRun.adventure.type.CommandType;
 import SpaceRun.adventure.type.Room;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import static SpaceRun.adventure.type.Time.getTime;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Iterator;
-import java.io.UnsupportedEncodingException;
 
 /**
  * ATTENZIONE: La descrizione del gioco è fatta in modo che qualsiasi gioco
@@ -36,7 +34,7 @@ import java.io.UnsupportedEncodingException;
  *
  * @author pierpaolo
  */
-public class FireHouseGame extends GameDescription {
+public class SpaceRun extends GameDescription {
 
     @Override
     public void init() throws Exception {
@@ -73,17 +71,20 @@ public class FireHouseGame extends GameDescription {
         end.setAlias(new String[]{"end", "fine", "esci", "muori", "ammazzati", "ucciditi", "suicidati", "exit"});
         getCommands().add(end);
         Command look = new Command(CommandType.LOOK_AT, "osserva");
-        look.setAlias(new String[]{"guarda", "vedi", "trova", "cerca", "descrivi", "ispeziona"});
+        look.setAlias(new String[]{"guarda", "vedi", "trova", "cerca", "descrivi", "ispeziona","esamina","leggi","osserva"});
         getCommands().add(look);
         Command pickup = new Command(CommandType.PICK_UP, "raccogli");
-        pickup.setAlias(new String[]{"prendi"});
+        pickup.setAlias(new String[]{"prendi", "ruba"});
         getCommands().add(pickup);
         Command open = new Command(CommandType.OPEN, "apri");
-        open.setAlias(new String[]{});
+        open.setAlias(new String[]{"fruga", "rovista", "deruba"});
         getCommands().add(open);
         Command push = new Command(CommandType.PUSH, "premi");
         push.setAlias(new String[]{"spingi","attiva","pigia"});
         getCommands().add(push);
+        Command use = new Command(CommandType.USE, "usa");
+        use.setAlias(new String[]{"utilizza", "rompi", "metti", "inserisci", "accendi", "uccidi", "spara", "riempi", "versa"});
+        getCommands().add(use);
         
         //Rooms
         try{
