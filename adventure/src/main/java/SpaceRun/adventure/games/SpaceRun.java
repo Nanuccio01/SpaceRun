@@ -5,7 +5,6 @@
  */
 package SpaceRun.adventure.games;
 
-import static com.sun.tools.javac.util.StringUtils.toUpperCase;
 import SpaceRun.adventure.GameDescription;
 import SpaceRun.adventure.parser.ParserOutput;
 import SpaceRun.adventure.type.AdvObject;
@@ -15,6 +14,7 @@ import SpaceRun.adventure.type.CommandType;
 import SpaceRun.adventure.type.Room;
 import java.io.BufferedReader;
 import static SpaceRun.adventure.type.Time.getTime;
+import static com.sun.tools.javac.util.StringUtils.toUpperCase;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -290,7 +290,7 @@ public class SpaceRun extends GameDescription {
                 }
             }
             if (noroom) {
-                out.println("Da quella parte non si può andare c'è un muro!\nNon hai ancora acquisito i poteri per oltrepassare i muri...");
+                out.println("Anche se siamo sullo spazio, è ancora impossibile attraversare i muri...");
             } else if (move) {
                 String time = getTime();
                 out.println(toUpperCase(getCurrentRoom().getName()) + "| Ore: " + time);
