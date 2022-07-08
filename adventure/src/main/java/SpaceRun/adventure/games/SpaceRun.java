@@ -83,7 +83,7 @@ public class SpaceRun extends GameDescription {
         push.setAlias(new String[]{"spingi","pigia"});
         getCommands().add(push);
         Command use = new Command(CommandType.USE, "usa");
-        use.setAlias(new String[]{"utilizza", "rompi", "metti", "inserisci", "uccidi", "spara", "guida", "parti"});
+        use.setAlias(new String[]{"utilizza", "rompi", "metti", "inserisci", "uccidi", "sali", "spara", "guida", "parti"});
         getCommands().add(use);
         Command turn_on = new Command(CommandType.TURN_ON, "accendi");
         use.setAlias(new String[]{"attiva"});
