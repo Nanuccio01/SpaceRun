@@ -71,20 +71,23 @@ public class SpaceRun extends GameDescription {
         end.setAlias(new String[]{"end", "fine", "esci", "muori", "ammazzati", "ucciditi", "suicidati", "exit"});
         getCommands().add(end);
         Command look = new Command(CommandType.LOOK_AT, "osserva");
-        look.setAlias(new String[]{"guarda", "vedi", "trova", "cerca", "descrivi", "ispeziona","esamina","leggi","osserva"});
+        look.setAlias(new String[]{"guarda", "vedi", "trova", "cerca", "descrivi", "ispeziona", "esamina", "leggi", "osserva", "ascolta"});
         getCommands().add(look);
         Command pickup = new Command(CommandType.PICK_UP, "raccogli");
         pickup.setAlias(new String[]{"prendi", "ruba"});
         getCommands().add(pickup);
         Command open = new Command(CommandType.OPEN, "apri");
-        open.setAlias(new String[]{"fruga", "rovista", "deruba"});
+        open.setAlias(new String[]{"fruga", "rovista"});
         getCommands().add(open);
         Command push = new Command(CommandType.PUSH, "premi");
-        push.setAlias(new String[]{"spingi","attiva","pigia"});
+        push.setAlias(new String[]{"spingi","pigia"});
         getCommands().add(push);
         Command use = new Command(CommandType.USE, "usa");
-        use.setAlias(new String[]{"utilizza", "rompi", "metti", "inserisci", "accendi", "uccidi", "spara", "riempi", "versa"});
+        use.setAlias(new String[]{"utilizza", "rompi", "metti", "inserisci", "uccidi", "spara", "guida", "parti"});
         getCommands().add(use);
+        Command turn_on = new Command(CommandType.TURN_ON, "accendi");
+        use.setAlias(new String[]{"attiva"});
+        getCommands().add(turn_on);
         
         //Rooms
         try{
