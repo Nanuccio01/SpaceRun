@@ -5,10 +5,12 @@
  */
 package SpaceRun.adventure;
 
+import SpaceRun.adventure.gui.SpaceRunJFrame;
 import SpaceRun.adventure.parser.ParserOutput;
 import SpaceRun.adventure.type.AdvObject;
 import SpaceRun.adventure.type.Command;
 import SpaceRun.adventure.type.Room;
+import java.awt.Frame;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,7 @@ public abstract class GameDescription {
 
     public abstract void init() throws Exception;
 
-    public abstract void nextMove(ParserOutput p, PrintStream out);
+    public abstract void nextMove(ParserOutput p, SpaceRunJFrame spaceRunJFrame);
     
     public abstract void differentEnd(String command);
 

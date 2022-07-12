@@ -12,14 +12,25 @@ import java.time.LocalTime;
  */
 public class Time {
     
-        public static String getTime() {
+    public static String addZero(int num){
+        String numString = "";  
+        
+        if (num < 10) {
+            numString = "0" + num;
+        }
+        return numString;
+    }
+    
+    
+    public static String getTime() {
         String time;  
+        
         LocalTime Coomplete_time = LocalTime.now();
-        int hour = Coomplete_time.getHour();
-        int minute = Coomplete_time.getMinute();
-        if(minute<10){
-            time = hour+":"+0+minute;
-        }else time = hour+":"+minute;
+        String hours = String.valueOf(addZero(Coomplete_time.getHour()));
+        String minutes = String.valueOf(addZero(Coomplete_time.getMinute()));
+        String seconds = String.valueOf(addZero(Coomplete_time.getSecond()));
+        
+        time = hours+":"+minutes+":"+seconds;
         return time;
     }
 }
