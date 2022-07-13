@@ -87,52 +87,111 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
         use.setAlias(new String[]{"utilizza", "rompi", "metti", "inserisci", "uccidi", "sali", "spara", "guida", "parti"});
         getCommands().add(use);
         Command turn_on = new Command(CommandType.TURN_ON, "accendi");
-        use.setAlias(new String[]{"attiva"});
+        turn_on.setAlias(new String[]{"attiva"});
         getCommands().add(turn_on);
+        Command mike = new Command(CommandType.MIKE, "Mike");
+        mike.setAlias(new String[]{"MIKE","mike"});
+        getCommands().add(mike);
         
         //Rooms
         try{
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room hall = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            hall.setLook(setParam[3]);
+            Room incubators = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //0
+            incubators.setLook(setParam[4]);
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room livingRoom = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            livingRoom.setLook(setParam[3]);
+            Room scientificCorridor = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //1
+            scientificCorridor.setLook(setParam[4]);
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room kitchen  = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            kitchen.setLook(setParam[3]);
+            Room observatory = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //2
+            observatory.setLook(setParam[4]);
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room bathroom = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            bathroom.setLook(setParam[3]);
+            Room warehouse = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //3
+            warehouse.setLook(setParam[4]);
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room yourRoom = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            yourRoom.setLook(setParam[3]); 
+            Room eastCorridor = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //4
+            eastCorridor.setLook(setParam[4]);
+            lineRoom = brRoom.readLine();
+            setParam = lineRoom.split("#");
+            Room dormitory = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //5
+            dormitory.setLook(setParam[4]);  
+            lineRoom = brRoom.readLine();
+            setParam = lineRoom.split("#");
+            Room conferenceRoom = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //6
+            conferenceRoom.setLook(setParam[4]);
+            lineRoom = brRoom.readLine();
+            setParam = lineRoom.split("#");
+            Room controlCabin = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //7
+            controlCabin.setLook(setParam[4]);
+            lineRoom = brRoom.readLine();
+            setParam = lineRoom.split("#"); 
+            Room eggLair = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //8
+            eggLair.setLook(setParam[4]);
+            lineRoom = brRoom.readLine();
+            setParam = lineRoom.split("#");
+            Room commandersThrone = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //9
+            commandersThrone.setLook(setParam[4]);
+            lineRoom = brRoom.readLine();
+            setParam = lineRoom.split("#");
+            Room controlRoom = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //10
+            controlRoom.setLook(setParam[4]);
+            lineRoom = brRoom.readLine();
+            setParam = lineRoom.split("#");
+            Room universalPort = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //11
+            universalPort.setLook(setParam[4]);
+            lineRoom = brRoom.readLine();
+            setParam = lineRoom.split("#");
+            Room spacecraft = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //12
+            spacecraft.setLook(setParam[4]);
             
             //Maps
-            kitchen.setEast(livingRoom);
-            livingRoom.setNorth(hall);
-            livingRoom.setWest(kitchen);
-            hall.setSouth(livingRoom);
-            hall.setWest(yourRoom);
-            hall.setNorth(bathroom);
-            bathroom.setSouth(hall);
-            yourRoom.setEast(hall);
-            getRooms().add(kitchen);
-            getRooms().add(livingRoom);
-            getRooms().add(hall);
-            getRooms().add(bathroom);
-            getRooms().add(yourRoom);
+            incubators.setNorth(scientificCorridor);
+            scientificCorridor.setEast(eastCorridor);
+            scientificCorridor.setWest(observatory);
+            scientificCorridor.setSouth(incubators);
+            observatory.setSouth(warehouse);
+            observatory.setEast(scientificCorridor);
+            warehouse.setNorth(observatory);
+            eastCorridor.setSouth(conferenceRoom);
+            eastCorridor.setNorth(dormitory);
+            eastCorridor.setWest(scientificCorridor);
+            conferenceRoom.setNorth(eastCorridor);
+            dormitory.setSouth(eastCorridor);
+            dormitory.setWest(controlCabin);
+            dormitory.setNorth(controlRoom);
+            controlCabin.setWest(eggLair);
+            controlCabin.setEast(dormitory);
+            eggLair.setNorth(commandersThrone);
+            eggLair.setEast(controlCabin);
+            commandersThrone.setSouth(eggLair);
+            controlRoom.setWest(universalPort);
+            controlRoom.setSouth(dormitory);
+            universalPort.setEast(controlRoom);
+
+            getRooms().add(incubators);
+            getRooms().add(scientificCorridor);
+            getRooms().add(observatory);
+            getRooms().add(warehouse);
+            getRooms().add(eastCorridor);
+            getRooms().add(dormitory);
+            getRooms().add(conferenceRoom);
+            getRooms().add(controlCabin);
+            getRooms().add(eggLair);
+            getRooms().add(commandersThrone);
+            getRooms().add(controlRoom);
+            getRooms().add(universalPort);
+            getRooms().add(spacecraft);
+            
             //Obejcts
             lineObjects = brObjects.readLine();
             setParam = lineObjects.split("#");
             AdvObject battery = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
             battery.setAlias(new String[]{"batterie", "pile", "pila"});
-            bathroom.getObjects().add(battery);
+            universalPort.getObjects().add(battery);
             
             lineObjects = brObjects.readLine();
             setParam = lineObjects.split("#");
@@ -141,7 +200,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             wardrobe.setOpenable(true);
             wardrobe.setPickupable(false);
             wardrobe.setOpen(false);
-            yourRoom.getObjects().add(wardrobe);
+            universalPort.getObjects().add(wardrobe);
             
             lineObjects = brObjects.readLine();
             setParam = lineObjects.split("#");
@@ -152,7 +211,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             wardrobe.add(toy);
             
             //Set starting room
-            setCurrentRoom(hall);
+            setCurrentRoom(incubators);
         } catch (IOException e) {
             System.out.println(e);
             System.exit(0);

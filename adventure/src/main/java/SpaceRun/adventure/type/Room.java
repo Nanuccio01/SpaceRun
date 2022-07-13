@@ -19,8 +19,12 @@ public class Room {
     private String name;
 
     private String description;
-
+    
+    private String mikeMessage;
+    
     private String look;
+    
+    private boolean visited = false;
 
     private boolean visible = true;
     
@@ -45,9 +49,12 @@ public class Room {
         this.name = name;
         this.description = description;
     }
-
-    public Room(int parseInt, int parseInt0, String parameter, String parameter0) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
+    public Room(int id, String name, String description, String mikeMessage) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.mikeMessage = mikeMessage;
     }
 
     public String getName() {
@@ -65,6 +72,14 @@ public class Room {
     public void setDescription(String description) {
         this.description = description;
     }
+    
+    public String getMikeMessage() {
+        return mikeMessage;
+    }
+
+    public void setMikeMessage(String mikeMessage) {
+        this.mikeMessage = mikeMessage;
+    }
 
     public boolean isVisible() {
         return visible;
@@ -72,6 +87,14 @@ public class Room {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+    
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
     }
     
     public boolean isLocked() {
