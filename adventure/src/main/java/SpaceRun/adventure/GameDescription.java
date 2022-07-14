@@ -53,6 +53,6 @@ public abstract class GameDescription {
 
     public abstract void nextMove(ParserOutput p, SpaceRunJFrame spaceRunJFrame);
     
-    public abstract void differentEnd(String command);
+    public abstract void differentEnd(String command, SpaceRunJFrame spaceRunJFrame);
 
 }

@@ -21,6 +21,13 @@ import java.io.File;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.YES_OPTION;
 
 
 /**
@@ -33,13 +40,18 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
 
     private final Parser parser;
     
+    private boolean saved = true;
+    
+    public static final String SPACERUN_DB = "CREATE TABLE IF NOT EXISTS spaceRunDB (PartitaId VARCHAR PRIMARY KEY, currentRoom INT, inventoryId VARCHAR(100))";
+    
     /**
      * Creates new form SpaceRunJFrame
      */
     public SpaceRunJFrame() {
         initComponents();
-        
+       
         this.game = new SpaceRun();
+        
         try {
             this.game.init();
         } catch (Exception ex) {
@@ -47,22 +59,26 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
         }
         Set<String> stopwords = Utils.loadFileListInSet(new File("./resources/stopwords"));
         parser = new Parser(stopwords);
-        
+        try{
         // Visualizzazione messaggi iniziali
-        GameTextArea.append("Ti trovi su un’astronave viscida e cupa, si riescono a distinguere solo le luci di pulsanti e sirene costantemente in funzione. "
+        DisplayOutputArea.append("Ti trovi su un’astronave viscida e cupa, si riescono a distinguere solo le luci di pulsanti e sirene costantemente in funzione. "
                 + "\nChi ti ha catturato? Come sei entrato lì? Perché sei mezzo morto? Non sai niente di niente. "
                 + "\nHai già osservato qualcosa in pochi momenti di vita e ti sembra di aver visto Alieni alti due metri che sembrano aver la funzione di dottori studianti specie viventi di tutto l’universo."
                 + "\nNoti che a causa di un malfunzionamento dovuto a delle tubature scollegate, si, proprio quelle che ti consentivano di sopravvivere, che sei l’unico essere vivente in grado di cercare una via di fuga e forse una speranza sull’astronave."
                 + "\nCapisci che ti hanno rinchiuso perché sarai il prossimo ad essere esaminato per studiare le tue capacità cognitive. Non sai se ne uscirai vivo…."
                 + "\nIstintivamente ti viene voglia di scappare e di tornare a casa. Ti ricordi però che non sei solo e sei nello spazio!  ");
-        GameTextArea.append("\n====================================================================================================================================\n");
-        GameTextArea.append(toUpperCase(game.getCurrentRoom().getName()));
-        GameTextArea.append("\n");
-        GameTextArea.append(game.getCurrentRoom().getDescription());
+        DisplayOutputArea.append("\n====================================================================================================================================\n");
+        DisplayOutputArea.append(toUpperCase(game.getCurrentRoom().getName()));
+        DisplayOutputArea.append("\n");
+        DisplayOutputArea.append(game.getCurrentRoom().getDescription());
         
         // Inizializzazione della visualizzazione dell'inventario
         InventoryTextArea.setText("\tInventario");
         InventoryTextArea.append("\n-------------------------");
+        } catch (Exception ex) {
+            System.err.println(ex);
+        }
+
     
     }
 
@@ -75,9 +91,9 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        GameTextField = new javax.swing.JTextField();
+        GameInputField = new javax.swing.JTextField();
         GameTextAreaJsp = new javax.swing.JScrollPane();
-        GameTextArea = new javax.swing.JTextArea();
+        DisplayOutputArea = new javax.swing.JTextArea();
         NorthButton = new javax.swing.JButton();
         SaveButton = new javax.swing.JButton();
         LookButton = new javax.swing.JButton();
@@ -94,16 +110,16 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SpaceRun");
 
-        GameTextField.setText("Inserisci comando..."); // NOI18N
-        GameTextField.addActionListener(new java.awt.event.ActionListener() {
+        GameInputField.setText("Inserisci comando..."); // NOI18N
+        GameInputField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GameTextFieldActionPerformed(evt);
+                GameInputFieldActionPerformed(evt);
             }
         });
 
-        GameTextArea.setColumns(20);
-        GameTextArea.setRows(5);
-        GameTextAreaJsp.setViewportView(GameTextArea);
+        DisplayOutputArea.setColumns(20);
+        DisplayOutputArea.setRows(5);
+        GameTextAreaJsp.setViewportView(DisplayOutputArea);
 
         NorthButton.setText("NORD");
         NorthButton.addActionListener(new java.awt.event.ActionListener() {
@@ -187,7 +203,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(GameTextField)
+                        .addComponent(GameInputField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(EnterButton))
                     .addComponent(GameTextAreaJsp, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
@@ -207,7 +223,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
                         .addGap(5, 5, 5)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(EnterButton)
-                            .addComponent(GameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(GameInputField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(SaveButton)
@@ -234,52 +250,52 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void EnterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterButtonActionPerformed
+        sendCommand();
+        checkEnd();
         String command = evt.getActionCommand();
-        ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
  
-        game.nextMove(p, this);
     }//GEN-LAST:event_EnterButtonActionPerformed
 
     private void SouthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SouthButtonActionPerformed
         ParserOutput p = parser.parse("sud", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
-        GameTextField.setText("");
-        GameTextArea.append("\n>> sud\n");
+        GameInputField.setText("");
+        DisplayOutputArea.append("\n>> sud\n");
         game.nextMove(p, this);
         
     }//GEN-LAST:event_SouthButtonActionPerformed
 
     private void WestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WestButtonActionPerformed
         ParserOutput p = parser.parse("ovest", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
-        GameTextField.setText("");
-        GameTextArea.append("\n>> ovest\n");
+        GameInputField.setText("");
+        DisplayOutputArea.append("\n>> ovest\n");
         game.nextMove(p, this);
     }//GEN-LAST:event_WestButtonActionPerformed
 
     private void NorthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NorthButtonActionPerformed
         ParserOutput p = parser.parse("nord", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
-        GameTextField.setText("");
-        GameTextArea.append("\n>> nord\n");
+        GameInputField.setText("");
+        DisplayOutputArea.append("\n>> nord\n");
         game.nextMove(p, this);
     }//GEN-LAST:event_NorthButtonActionPerformed
 
-    private void GameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GameTextFieldActionPerformed
+    private void GameInputFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GameInputFieldActionPerformed
         
         String command = evt.getActionCommand();
         ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         game.nextMove(p, this);
-    }//GEN-LAST:event_GameTextFieldActionPerformed
+    }//GEN-LAST:event_GameInputFieldActionPerformed
 
     private void EastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EastButtonActionPerformed
         ParserOutput p = parser.parse("est", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
-        GameTextField.setText("");
-        GameTextArea.append("\n>> est\n");
+        GameInputField.setText("");
+        DisplayOutputArea.append("\n>> est\n");
         game.nextMove(p, this);
     }//GEN-LAST:event_EastButtonActionPerformed
 
     private void LookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LookButtonActionPerformed
         ParserOutput p = parser.parse("osserva", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
-        GameTextField.setText("");
-        GameTextArea.append("\n>> osserva\n");
+        GameInputField.setText("");
+        DisplayOutputArea.append("\n>> osserva\n");
         game.nextMove(p, this);
     }//GEN-LAST:event_LookButtonActionPerformed
 
@@ -313,11 +329,11 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea DisplayOutputArea;
     private javax.swing.JButton EastButton;
     private javax.swing.JButton EnterButton;
-    private javax.swing.JTextArea GameTextArea;
+    private javax.swing.JTextField GameInputField;
     private javax.swing.JScrollPane GameTextAreaJsp;
-    private javax.swing.JTextField GameTextField;
     private javax.swing.JTextArea InventoryTextArea;
     private javax.swing.JScrollPane InventoryTextAreaJsp;
     private javax.swing.JButton LoadButton;
@@ -331,6 +347,135 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
    
     public void GameTextAreaSetText(String s) {
-         GameTextArea.setText(s);
+         DisplayOutputArea.setText(s);
     }
-}
+
+
+    private void sendCommand() {
+        if (GameInputField.getText().length() > 0) {
+            String command = GameInputField.getText();
+            ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
+            GameInputField.setText("");
+
+            s = new StringBuilder("\n");
+
+            if (p.getCommand() != null && p.getCommand().getType() == CommandType.END) {
+                    game.differentEnd(command, this);
+                    DisplayOutputArea.append("\nAddio!");
+                    DisplayOutputArea.setCaretPosition(DisplayOutputArea.getDocument().getLength());
+                    System.exit(0);
+                
+            } else if (p.getCommand() != null && p.getCommand().getType() == CommandType.SAVE) {
+                    saveGame(); //Creare DB e fare metodo
+                    checkEnd();
+
+                } else if (p.getCommand() != null && p.getCommand().getType() == CommandType.LOAD) {
+              
+                    if (!saved) {
+                        int option = JOptionPane.showConfirmDialog(null, "Ci sono modifiche non salvate. Sicuro di voler caricare una nuova partita?", "Caricamento file", JOptionPane.YES_NO_CANCEL_OPTION);
+                        if (option == JOptionPane.YES_OPTION) {
+                            loadGame();
+                            saved = true;
+                        } else if (option == JOptionPane.NO_OPTION) {
+                            saveGame();
+                        } else if (option == JOptionPane.CANCEL_OPTION) {
+                            return;
+                        }
+                    } else {
+                        loadGame();
+                        saved = true;
+                    }
+                }
+
+            } else {
+                DisplayOutputArea.append("\n>> " + command + "\n");
+                DisplayOutputArea.setCaretPosition(0);
+                DisplayOutputArea.setCaretPosition(DisplayOutputArea.getDocument().getLength());
+                if (fast) {
+                    DisplayOutputArea.append(game.nextMove(p));
+                } else {
+                    s.append(game.nextMove(p));
+                }
+                DisplayOutputArea.setCaretPosition(DisplayOutputArea.getDocument().getLength());
+
+                
+                updateInventory();
+                saved = false;
+
+                checkEnd();
+            }
+        }
+    
+    private void saveGame() {
+      try {
+                    boolean flag = false;
+                    boolean exist_flag = false; //flag per l'esistenza di una partita con lo stesso nome
+                    Connection conn = DriverManager.getConnection("jdbc:h2:./src/main/resources/db/save");
+                    Statement st = conn.createStatement();
+                    st.executeUpdate(SPACERUN_DB);
+                    DisplayOutputArea.append("\nCon che nome vuoi salvare questa partita?");
+                    String input = GameInputField.getText(); //inserire controlli per la parola
+                    ResultSet rs = st.executeQuery("SELECT PartitaID FROM spaceRunDB "); //
+                    while (rs.next()){
+                        String partita = rs.getString(1);
+                        if (partita.equals(input)){
+                            exist_flag = true;
+                        }
+                    }
+                    if (exist_flag){
+                        DisplayOutputArea.append("\nEsiste già una partita salvata con questo nome. Stai sovrascrivendo la vecchia partita...");
+                        PreparedStatement pst = conn.prepareStatement("UPDATE spaceRunDB SET currentRoom = ?, inventoryId = ? WHERE PartitaID = "+input+"");
+                        pst.setInt(2, this.game.getCurrentRoom().getId());
+                        Iterator<AdvObject> it = this.game.getInventory().iterator();
+                        String Obj = "";
+                        while (it.hasNext()) {
+                            flag = true;
+                            AdvObject next = it.next();
+                            Obj = Obj + next.getId() + "#";
+                        }
+
+                        if (flag) {
+                            pst.setString(3, Obj);
+                        } else {
+                            Obj = null;
+                            pst.setString(3, Obj);
+                        }
+                        pst.executeUpdate();
+                        pst.close();
+                    } else{
+                        PreparedStatement pst = conn.prepareStatement("INSERT INTO spaceRunDB VALUES (?,?,?)");
+                        pst.setString(1, input);
+                        pst.setInt(2, this.game.getCurrentRoom().getId());
+                        Iterator<AdvObject> it = this.game.getInventory().iterator();
+                        String Obj = "";
+                        while (it.hasNext()) {
+                            flag = true;
+                            AdvObject next = it.next();
+                            Obj = Obj + next.getId() + "#";
+                        }
+
+                        if (flag) {
+                            pst.setString(3, Obj);
+                        } else {
+                            Obj = null;
+                            pst.setString(3, Obj);
+                        }
+                        pst.executeUpdate();
+                        pst.close();
+                    } 
+                    
+                    st.close();
+                    DisplayOutputArea.append("\nSalvataggio effettuato correttamente!");
+                    
+    
+                 
+
+                } catch (SQLException ex) {
+                    System.err.println(ex.getSQLState() + ": " + ex.getMessage());
+                    DisplayOutputArea.append("\nSalvataggio non riuscito");
+                }        
+    }
+    private void loadGame(){
+        
+        }
+    }

@@ -145,7 +145,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             universalPort.setLook(setParam[4]);
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room spacecraft = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //12
+            Room spacecraft = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //12
             spacecraft.setLook(setParam[4]);
             
             //Maps
@@ -369,19 +369,19 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
     }
     
         @Override
-        public void differentEnd (String command) {
+        public void differentEnd (String command, SpaceRunJFrame spaceRunJFrame) {
 
             switch (command) {
                 case "suicidati": case "ammazzati": case "ucciditi":
-                    System.out.print("Decidi di correre contro gli alieni per porre fine alle tue sofferenze.\n L'aria dello spazio gioca brutti scherzi. ");
+                    spaceRunJFrame.GameTextAreaSetText("Decidi di correre contro gli alieni per porre fine alle tue sofferenze.\n L'aria dello spazio gioca brutti scherzi. ");
                 break;
                 
                 case "muori":
-                    System.out.println("Infarto istantaneo. E' stato rapido ed indolore.");
+                    spaceRunJFrame.GameTextAreaSetText("Infarto istantaneo. E' stato rapido ed indolore.");
                 break;
   
                 case "end": case "fine": case "exit": case "esci":
-                    System.out.println("Se l'umanità avesse una speranza, adesso non ce l'ha più...");
+                    spaceRunJFrame.GameTextAreaSetText("Se l'umanità avesse una speranza, adesso non ce l'ha più...");
                 break;
             }
         }
