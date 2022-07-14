@@ -50,11 +50,8 @@ public class Room {
         this.description = description;
     }
     
-    public Room(int id, String name, String description, String mikeMessage) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.mikeMessage = mikeMessage;
+    public int getId() {
+        return id;
     }
 
     public String getName() {

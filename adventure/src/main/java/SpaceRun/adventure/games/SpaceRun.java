@@ -97,55 +97,70 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
         try{
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room incubators = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //0
+            Room incubators = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //0
+            incubators.setMikeMessage(setParam[3]);
             incubators.setLook(setParam[4]);
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room scientificCorridor = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //1
+            Room scientificCorridor = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //1
+            scientificCorridor.setMikeMessage(setParam[3]);
             scientificCorridor.setLook(setParam[4]);
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room observatory = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //2
-            observatory.setLook(setParam[4]);
+            Room observatory = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //2
+            observatory.setMikeMessage(setParam[3]);
+            observatory.setLook(setParam[4]);          
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room warehouse = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //3
-            warehouse.setLook(setParam[4]);
+            Room warehouse = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //3
+            warehouse.setMikeMessage(setParam[3]);
+            warehouse.setLook(setParam[4]);          
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room eastCorridor = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //4
-            eastCorridor.setLook(setParam[4]);
+            Room eastCorridor = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //4
+            eastCorridor.setMikeMessage(setParam[3]);
+            eastCorridor.setLook(setParam[4]);          
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room dormitory = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //5
-            dormitory.setLook(setParam[4]);  
+            Room dormitory = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //5
+            dormitory.setMikeMessage(setParam[3]);
+            dormitory.setLook(setParam[4]); 
+            dormitory.setVisible(false);
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room conferenceRoom = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //6
-            conferenceRoom.setLook(setParam[4]);
+            Room conferenceRoom = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //6
+            conferenceRoom.setMikeMessage(setParam[3]);
+            conferenceRoom.setLook(setParam[4]); 
+            conferenceRoom.setLocked(true);
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room controlCabin = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //7
-            controlCabin.setLook(setParam[4]);
+            Room controlCabin = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //7
+            controlCabin.setMikeMessage(setParam[3]);
+            controlCabin.setLook(setParam[4]);     
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#"); 
-            Room eggLair = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //8
-            eggLair.setLook(setParam[4]);
+            Room eggLair = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //8
+            eggLair.setMikeMessage(setParam[3]);
+            eggLair.setLook(setParam[4]);        
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room commandersThrone = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //9
-            commandersThrone.setLook(setParam[4]);
+            Room commandersThrone = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //9
+            commandersThrone.setMikeMessage(setParam[3]);
+            commandersThrone.setLook(setParam[4]);       
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room controlRoom = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //10
-            controlRoom.setLook(setParam[4]);
+            Room controlRoom = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //10
+            controlRoom.setMikeMessage(setParam[3]);
+            controlRoom.setLook(setParam[4]);      
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
-            Room universalPort = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2], setParam[3]); //11
+            Room universalPort = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //11
+            universalPort.setMikeMessage(setParam[3]);
             universalPort.setLook(setParam[4]);
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
             Room spacecraft = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //12
+            spacecraft.setMikeMessage(setParam[3]);
             spacecraft.setLook(setParam[4]);
             
             //Maps
@@ -187,29 +202,121 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             getRooms().add(spacecraft);
             
             //Obejcts
-            lineObjects = brObjects.readLine();
+            lineObjects = brObjects.readLine(); //0
             setParam = lineObjects.split("#");
-            AdvObject battery = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            battery.setAlias(new String[]{"batterie", "pile", "pila"});
-            universalPort.getObjects().add(battery);
+            AdvObjectContainer backpack = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); 
+            backpack.setAlias(new String[]{"zainetto", "zaino", "backpack"});
+            backpack.setOpenable(true);
+            incubators.getObjects().add(backpack);
             
-            lineObjects = brObjects.readLine();
+            lineObjects = brObjects.readLine(); //1
             setParam = lineObjects.split("#");
-            AdvObjectContainer wardrobe = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            wardrobe.setAlias(new String[]{"guardaroba", "vestiario"});
-            wardrobe.setOpenable(true);
-            wardrobe.setPickupable(false);
-            wardrobe.setOpen(false);
-            universalPort.getObjects().add(wardrobe);
+            AdvObject wristwatch = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);                  
+            wristwatch.setAlias(new String[]{"orario", "tempo"});
+            backpack.add(wristwatch);
             
-            lineObjects = brObjects.readLine();
+            lineObjects = brObjects.readLine(); //2
             setParam = lineObjects.split("#");
-            AdvObject toy = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            toy.setAlias(new String[]{"gioco", "robot"});
-            toy.setPushable(true);
-            toy.setPush(false);
-            wardrobe.add(toy);
+            AdvObjectContainer drawer = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            drawer.setAlias(new String[]{"tiretto", "robot"});
+            drawer.setOpenable(true);
+            warehouse.getObjects().add(drawer);
             
+            lineObjects = brObjects.readLine(); //3
+            setParam = lineObjects.split("#");
+            AdvObjectContainer box = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            box.setAlias(new String[]{});
+            box.setOpenable(true);
+            drawer.add(box);
+            
+            lineObjects = brObjects.readLine(); //4
+            setParam = lineObjects.split("#");
+            AdvObject paperwork = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            paperwork.setAlias(new String[]{"fogli di carta", "fogli"});
+            paperwork.setPickupable(false);
+            drawer.add(paperwork);
+
+            lineObjects = brObjects.readLine(); //5
+            setParam = lineObjects.split("#");
+            AdvObject laserGun = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            laserGun.setAlias(new String[]{"pistola", "pistola laser"});
+            box.add(laserGun);  
+            
+            lineObjects = brObjects.readLine(); //6
+            setParam = lineObjects.split("#");
+            AdvObject torch = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            torch.setAlias(new String[]{"torcia", "luce"});
+            box.add(torch);
+            
+            lineObjects = brObjects.readLine(); //7
+            setParam = lineObjects.split("#");
+            AdvObject cup = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            cup.setAlias(new String[]{"tazzina"});
+            cup.setPickupable(false);
+            box.add(cup);
+            
+            lineObjects = brObjects.readLine(); //8
+            setParam = lineObjects.split("#");
+            AdvObject familyPhoto = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            familyPhoto.setAlias(new String[]{"foto", "ritratto", "foto ricordo", "scatto"});
+            familyPhoto.setPickupable(false);
+            box.add(familyPhoto);
+            
+            lineObjects = brObjects.readLine(); //9
+            setParam = lineObjects.split("#");
+            AdvObject pen = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            pen.setAlias(new String[]{});
+            pen.setPickupable(false);
+            box.add(pen);
+            
+            lineObjects = brObjects.readLine(); //10
+            setParam = lineObjects.split("#");
+            AdvObjectContainer uniforms = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            uniforms.setAlias(new String[]{"vestiti","panni","mucchio di robe"});
+            uniforms.setOpenable(true);
+            dormitory.getObjects().add(uniforms);
+            
+            lineObjects = brObjects.readLine(); //11
+            setParam = lineObjects.split("#");
+            AdvObject badge = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            badge.setAlias(new String[]{"tessera", "badge", "tessera riconoscimento"});
+            uniforms.add(badge);
+            
+            lineObjects = brObjects.readLine(); //12
+            setParam = lineObjects.split("#");
+            AdvObject universalTranslator = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            universalTranslator.setAlias(new String[]{"traduttore"});
+            conferenceRoom.getObjects().add(universalTranslator);
+            
+            lineObjects = brObjects.readLine(); //13
+            setParam = lineObjects.split("#");
+            AdvObject camcorders = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            camcorders.setAlias(new String[]{"videocamere"});
+            camcorders.setPickupable(false);
+            controlCabin.getObjects().add(camcorders);
+            
+            lineObjects = brObjects.readLine(); //14
+            setParam = lineObjects.split("#");
+            AdvObject videoClips = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            videoClips.setAlias(new String[]{"registrazioni","video"});
+            videoClips.setPickupable(false);
+            controlCabin.getObjects().add(videoClips);
+            
+            lineObjects = brObjects.readLine(); //15
+            setParam = lineObjects.split("#");
+            AdvObject maps = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            maps.setAlias(new String[]{"piantina","mappa navicella","mappa astronave"});
+            maps.setPickupable(false);
+            controlCabin.getObjects().add(maps);
+            
+            lineObjects = brObjects.readLine(); //16
+            setParam = lineObjects.split("#");
+            AdvObject redButton = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            redButton.setAlias(new String[]{"piantina","mappa navicella","mappa astronave"});
+            redButton.setPickupable(false);
+            redButton.setPushable(true);
+            spacecraft.getObjects().add(redButton); 
+                       
             //Set starting room
             setCurrentRoom(incubators);
         } catch (IOException e) {
@@ -221,7 +328,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
     @Override
     public void nextMove(ParserOutput p, SpaceRunJFrame spaceRunJFrame) {
         if (p.getCommand() == null) {
-            spaceRunJFrame.GameTextAreaSetText("Non ho capito cosa devo fare! Prova con un altro comando.");
+            spaceRunJFrame.DisplayOutputSetText("Non ho capito cosa devo fare! Prova con un altro comando.");
         } else {
             //move
             boolean noroom = false;
@@ -257,28 +364,28 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             } else if (p.getCommand().getType() == CommandType.INVENTORY) {
                 boolean isNotEmpty = getInventory() != null && !getInventory().isEmpty();
                 if(isNotEmpty){
-                    spaceRunJFrame.GameTextAreaSetText("Nel tuo inventario ci sono:");
+                    spaceRunJFrame.DisplayOutputSetText("Nel tuo inventario ci sono:");
                     for (AdvObject o : getInventory()) {
-                        spaceRunJFrame.GameTextAreaSetText(o.getName() + ": " + o.getDescription());
+                        spaceRunJFrame.DisplayOutputSetText(o.getName() + ": " + o.getDescription());
                     }
-                } else spaceRunJFrame.GameTextAreaSetText("Inventario vuoto, sarà ora che ti sbrighi se vuoi trovare una via di fuga...");  
+                } else spaceRunJFrame.DisplayOutputSetText("Inventario vuoto, sarà ora che ti sbrighi se vuoi trovare una via di fuga...");  
             } else if (p.getCommand().getType() == CommandType.LOOK_AT) {
                 if (getCurrentRoom().getLook() != null) {
-                    spaceRunJFrame.GameTextAreaSetText(getCurrentRoom().getLook());
+                    spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getLook());
                 } else {
-                    spaceRunJFrame.GameTextAreaSetText("Non c'è niente di interessante qui.");
+                    spaceRunJFrame.DisplayOutputSetText("Non c'è niente di interessante qui.");
                 }
             } else if (p.getCommand().getType() == CommandType.PICK_UP) {
                 if (p.getObject() != null) {
                     if (p.getObject().isPickupable()) {
                         getInventory().add(p.getObject());
                         getCurrentRoom().getObjects().remove(p.getObject());
-                        spaceRunJFrame.GameTextAreaSetText("Hai raccolto: " + p.getObject().getDescription());
+                        spaceRunJFrame.DisplayOutputSetText("Hai raccolto: " + p.getObject().getDescription());
                     } else {
-                        spaceRunJFrame.GameTextAreaSetText("Non puoi raccogliere questo oggetto.");
+                        spaceRunJFrame.DisplayOutputSetText("Non puoi raccogliere questo oggetto.");
                     }
                 } else {
-                    spaceRunJFrame.GameTextAreaSetText("Non c'è niente da raccogliere qui.");
+                    spaceRunJFrame.DisplayOutputSetText("Non c'è niente da raccogliere qui.");
                 }
             } else if (p.getCommand().getType() == CommandType.OPEN) {
                 /*ATTENZIONE: quando un oggetto contenitore viene aperto, tutti gli oggetti contenuti
@@ -286,30 +393,30 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                 * Potrebbe non esssere la soluzione ottimale.
                  */
                 if (p.getObject() == null && p.getInvObject() == null) {
-                    spaceRunJFrame.GameTextAreaSetText("Non c'è niente da aprire qui.");
+                    spaceRunJFrame.DisplayOutputSetText("Non c'è niente da aprire qui.");
                 } else {
                     if (p.getObject() != null) {
                         if (p.getObject().isOpenable() && p.getObject().isOpen() == false) {
                             if (p.getObject() instanceof AdvObjectContainer) {
-                                spaceRunJFrame.GameTextAreaSetText("Hai aperto: " + p.getObject().getName());
+                                spaceRunJFrame.DisplayOutputSetText("Hai aperto: " + p.getObject().getName());
                                 AdvObjectContainer c = (AdvObjectContainer) p.getObject();
                                 if (!c.getList().isEmpty()) {
-                                    spaceRunJFrame.GameTextAreaSetText(c.getName() + " contiene:");
+                                    spaceRunJFrame.DisplayOutputSetText(c.getName() + " contiene:");
                                     Iterator<AdvObject> it = c.getList().iterator();
                                     while (it.hasNext()) {
                                         AdvObject next = it.next();
                                         getCurrentRoom().getObjects().add(next);
-                                        spaceRunJFrame.GameTextAreaSetText(" " + next.getName());
+                                        spaceRunJFrame.DisplayOutputSetText(" " + next.getName());
                                         it.remove();
                                     }
-                                    spaceRunJFrame.GameTextAreaSetText("");
+                                    spaceRunJFrame.DisplayOutputSetText("");
                                 }
                             } else {
-                                spaceRunJFrame.GameTextAreaSetText("Hai aperto: " + p.getObject().getName());
+                                spaceRunJFrame.DisplayOutputSetText("Hai aperto: " + p.getObject().getName());
                                 p.getObject().setOpen(true);
                             }
                         } else {
-                            spaceRunJFrame.GameTextAreaSetText("Non puoi aprire questo oggetto.");
+                            spaceRunJFrame.DisplayOutputSetText("Non puoi aprire questo oggetto.");
                         }
                     }
                     if (p.getInvObject() != null) {
@@ -317,48 +424,48 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                             if (p.getInvObject() instanceof AdvObjectContainer) {
                                 AdvObjectContainer c = (AdvObjectContainer) p.getInvObject();
                                 if (!c.getList().isEmpty()) {
-                                    spaceRunJFrame.GameTextAreaSetText(c.getName() + " contiene:");
+                                    spaceRunJFrame.DisplayOutputSetText(c.getName() + " contiene:");
                                     Iterator<AdvObject> it = c.getList().iterator();
                                     while (it.hasNext()) {
                                         AdvObject next = it.next();
                                         getInventory().add(next);
-                                        spaceRunJFrame.GameTextAreaSetText(" " + next.getName());
+                                        spaceRunJFrame.DisplayOutputSetText(" " + next.getName());
                                         it.remove();
                                     }
-                                    spaceRunJFrame.GameTextAreaSetText("");
+                                    spaceRunJFrame.DisplayOutputSetText("");
                                 }
                             } else {
                                 p.getInvObject().setOpen(true);
                             }
-                            spaceRunJFrame.GameTextAreaSetText("Hai aperto nel tuo inventario: " + p.getInvObject().getName());
+                            spaceRunJFrame.DisplayOutputSetText("Hai aperto nel tuo inventario: " + p.getInvObject().getName());
                         } else {
-                            spaceRunJFrame.GameTextAreaSetText("Non puoi aprire questo oggetto.");
+                            spaceRunJFrame.DisplayOutputSetText("Non puoi aprire questo oggetto.");
                         }
                     }
                 }
             } else if (p.getCommand().getType() == CommandType.PUSH) {
                 //ricerca oggetti pushabili
                 if (p.getObject() != null && p.getObject().isPushable()) {
-                    spaceRunJFrame.GameTextAreaSetText("Hai premuto: " + p.getObject().getName());
+                    spaceRunJFrame.DisplayOutputSetText("Hai premuto: " + p.getObject().getName());
                     if (p.getObject().getId() == 3) {
                         end();
                     }
                 } else if (p.getInvObject() != null && p.getInvObject().isPushable()) {
-                    spaceRunJFrame.GameTextAreaSetText("Hai premuto: " + p.getInvObject().getName());
+                    spaceRunJFrame.DisplayOutputSetText("Hai premuto: " + p.getInvObject().getName());
                     if (p.getInvObject().getId() == 3) {
                         end();
                     }
                 } else {
-                    spaceRunJFrame.GameTextAreaSetText("Non ci sono oggetti che puoi premere qui.");
+                    spaceRunJFrame.DisplayOutputSetText("Non ci sono oggetti che puoi premere qui.");
                 }
             }
             if (noroom) {
-                spaceRunJFrame.GameTextAreaSetText("Anche se siamo sullo spazio, è ancora impossibile attraversare i muri...");
+                spaceRunJFrame.DisplayOutputSetText("Anche se siamo sullo spazio, è ancora impossibile attraversare i muri...");
             } else if (move) {
                 String time = getTime();
-                spaceRunJFrame.GameTextAreaSetText(toUpperCase(getCurrentRoom().getName()) + "| Ore: " + time);
-                spaceRunJFrame.GameTextAreaSetText("================================================");
-                spaceRunJFrame.GameTextAreaSetText(getCurrentRoom().getDescription());
+                spaceRunJFrame.DisplayOutputSetText(toUpperCase(getCurrentRoom().getName()) + "| Ore: " + time);
+                spaceRunJFrame.DisplayOutputSetText("================================================");
+                spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getDescription());
             }
         }
     }
@@ -373,15 +480,15 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
 
             switch (command) {
                 case "suicidati": case "ammazzati": case "ucciditi":
-                    spaceRunJFrame.GameTextAreaSetText("Decidi di correre contro gli alieni per porre fine alle tue sofferenze.\n L'aria dello spazio gioca brutti scherzi. ");
+                    spaceRunJFrame.DisplayOutputSetText("Decidi di correre contro gli alieni per porre fine alle tue sofferenze.\n L'aria dello spazio gioca brutti scherzi. ");
                 break;
                 
                 case "muori":
-                    spaceRunJFrame.GameTextAreaSetText("Infarto istantaneo. E' stato rapido ed indolore.");
+                    spaceRunJFrame.DisplayOutputSetText("Infarto istantaneo. E' stato rapido ed indolore.");
                 break;
   
                 case "end": case "fine": case "exit": case "esci":
-                    spaceRunJFrame.GameTextAreaSetText("Se l'umanità avesse una speranza, adesso non ce l'ha più...");
+                    spaceRunJFrame.DisplayOutputSetText("Se l'umanità avesse una speranza, adesso non ce l'ha più...");
                 break;
             }
         }

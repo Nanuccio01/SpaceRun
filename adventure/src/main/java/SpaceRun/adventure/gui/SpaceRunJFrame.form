@@ -60,7 +60,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="EnterButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="GameTextAreaJsp" pref="550" max="32767" attributes="0"/>
+                  <Component id="DisplayOutputAreaJsp" pref="550" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="LoadButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -77,7 +77,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="GameTextAreaJsp" min="-2" pref="553" max="-2" attributes="0"/>
+                      <Component id="DisplayOutputAreaJsp" min="-2" pref="553" max="-2" attributes="0"/>
                       <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="EnterButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -121,7 +121,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="GameInputFieldActionPerformed"/>
       </Events>
     </Component>
-    <Container class="javax.swing.JScrollPane" name="GameTextAreaJsp">
+    <Container class="javax.swing.JScrollPane" name="DisplayOutputAreaJsp">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
