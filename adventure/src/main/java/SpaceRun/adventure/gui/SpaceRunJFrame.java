@@ -119,6 +119,8 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
 
         DisplayOutputArea.setColumns(20);
         DisplayOutputArea.setRows(5);
+        DisplayOutputArea.setBorder(null);
+        DisplayOutputArea.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         DisplayOutputAreaJsp.setViewportView(DisplayOutputArea);
 
         NorthButton.setText("NORD");
@@ -255,7 +257,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
         String command = evt.getActionCommand();*/
  
     }//GEN-LAST:event_EnterButtonActionPerformed
-
+ 
     private void SouthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SouthButtonActionPerformed
         ParserOutput p = parser.parse("sud", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         GameInputField.setText("");

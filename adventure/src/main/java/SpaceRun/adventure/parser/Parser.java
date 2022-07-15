@@ -46,6 +46,8 @@ public class Parser {
     * rimossi.
      */
     public ParserOutput parse(String command, List<Command> commands, List<AdvObject> objects, List<AdvObject> inventory) {
+        command = command.trim();
+        command = command.toLowerCase();
         List<String> tokens = Utils.parseString(command, stopwords);
         if (!tokens.isEmpty()) {
             int ic = checkForCommand(tokens.get(0), commands);
