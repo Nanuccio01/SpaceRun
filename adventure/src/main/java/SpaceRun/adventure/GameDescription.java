@@ -10,8 +10,6 @@ import SpaceRun.adventure.parser.ParserOutput;
 import SpaceRun.adventure.type.AdvObject;
 import SpaceRun.adventure.type.Command;
 import SpaceRun.adventure.type.Room;
-import java.awt.Frame;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 

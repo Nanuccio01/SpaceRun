@@ -151,6 +151,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             Room controlRoom = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //10
             controlRoom.setMikeMessage(setParam[3]);
             controlRoom.setLook(setParam[4]);
+            controlRoom.setLocked(true);
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
             Room universalPort = new Room(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); //11
@@ -491,16 +492,18 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                  }
             } else if (blocked) {
                 if (p.getCommand().getType() == CommandType.SOUTH && getCurrentRoom().getSouth().isLocked() == true && getCurrentRoom().getId() == 4) {
-                    spaceRunJFrame.DisplayOutputSetText("Questa stanza sembra sigillata, forse contiene qualcosa di segreto. Ci sarà un'altra via per entrarci... \n");
+                    spaceRunJFrame.DisplayOutputSetText("Ti sbagliavi, questa stanza è chiusa, e serve una tessera di riconoscimento per entrare. \n");
                 } else if (p.getCommand().getType() == CommandType.WEST && getCurrentRoom().getWest().isLocked() == true && getCurrentRoom().getId() == 10) {
                     spaceRunJFrame.DisplayOutputSetText(" Giri la testa e noti subito che non sei solo… C’è una guardia aliena che sorveglia una porta. Assicurati che tu sappia come affrontare la guardia, non sono molto socievoli! \n ");
-                } else {
+                } else if (p.getCommand().getType() == CommandType.NORD && getCurrentRoom().getNorth().isLocked() == true && getCurrentRoom().getId() == 5) {
+                    spaceRunJFrame.DisplayOutputSetText(" Questa stanza è chiusa, e serve una tessera di riconoscimento per entrare. \n ");
+                }else {
                     spaceRunJFrame.DisplayOutputSetText("La porta per quella stanza è bloccata. \n");
                 }
             } else if (move) {
-                spaceRunJFrame.DisplayOutputSetText("Ora ti trovi in: " + toUpperCase(getCurrentRoom().getName()));
-                spaceRunJFrame.DisplayOutputSetText("\n==================================================================\n");
-                spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getDescription() + "\n");
+                    spaceRunJFrame.DisplayOutputSetText("Ora ti trovi in: " + toUpperCase(getCurrentRoom().getName()));
+                    spaceRunJFrame.DisplayOutputSetText("\n==================================================================\n");
+                    spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getDescription() + "\n");    
             }
         }
     }
