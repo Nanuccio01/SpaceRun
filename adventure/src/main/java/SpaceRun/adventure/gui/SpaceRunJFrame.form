@@ -60,7 +60,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="EnterButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="DisplayOutputAreaJsp" pref="550" max="32767" attributes="0"/>
+                  <Component id="DisplayOutputAreaJsp" min="-2" pref="553" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="LoadButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -122,6 +122,12 @@
       </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="DisplayOutputAreaJsp">
+      <Properties>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
+        <Property name="requestFocusEnabled" type="boolean" value="false"/>
+        <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
+        <Property name="wheelScrollingEnabled" type="boolean" value="false"/>
+      </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>

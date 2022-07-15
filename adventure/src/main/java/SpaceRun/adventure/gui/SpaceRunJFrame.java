@@ -50,7 +50,11 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
      * Creates new form SpaceRunJFrame
      */
     public SpaceRunJFrame() {
-               initComponents();
+        initComponents();
+        DisplayOutputArea.setLineWrap(true);
+        DisplayOutputArea.setWrapStyleWord(true);
+        InventoryTextArea.setLineWrap(true);
+        InventoryTextArea.setWrapStyleWord(true);
         
         this.game = new SpaceRun();
         try {
@@ -68,14 +72,14 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
                 + "\nNoti che a causa di un malfunzionamento dovuto a delle tubature scollegate, si, proprio quelle che ti consentivano di sopravvivere, che sei l’unico essere vivente in grado di cercare una via di fuga e forse una speranza sull’astronave."
                 + "\nCapisci che ti hanno rinchiuso perché sarai il prossimo ad essere esaminato per studiare le tue capacità cognitive. Non sai se ne uscirai vivo…."
                 + "\nIstintivamente ti viene voglia di scappare e di tornare a casa. Ti ricordi però che non sei solo e sei nello spazio!  ");        
-            DisplayOutputArea.append("\n====================================================================================================================================\n");
-            DisplayOutputArea.append(toUpperCase(game.getCurrentRoom().getName()));
+            DisplayOutputArea.append("\n==================================================================\n");
+            DisplayOutputArea.append("Ora ti trovi in: " + toUpperCase(game.getCurrentRoom().getName()));
             DisplayOutputArea.append("\n");
-            DisplayOutputArea.append(game.getCurrentRoom().getDescription());
+            DisplayOutputArea.append(game.getCurrentRoom().getDescription() + "\n");
         
             //Inizializzazione della visualizzazione dell'inventario
-            InventoryTextArea.setText("\tInventario");
-            InventoryTextArea.append("\n-------------------------");
+            InventoryTextArea.setText("     Inventario");
+            InventoryTextArea.append("\n ------------------\n");
         
         }catch (Exception ex) {
             System.err.println(ex);
@@ -116,6 +120,11 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
                 GameInputFieldActionPerformed(evt);
             }
         });
+
+        DisplayOutputAreaJsp.setToolTipText("");
+        DisplayOutputAreaJsp.setRequestFocusEnabled(false);
+        DisplayOutputAreaJsp.setVerifyInputWhenFocusTarget(false);
+        DisplayOutputAreaJsp.setWheelScrollingEnabled(false);
 
         DisplayOutputArea.setColumns(20);
         DisplayOutputArea.setRows(5);
@@ -208,7 +217,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
                         .addComponent(GameInputField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(EnterButton))
-                    .addComponent(DisplayOutputAreaJsp, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+                    .addComponent(DisplayOutputAreaJsp, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(LoadButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -261,7 +270,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     private void SouthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SouthButtonActionPerformed
         ParserOutput p = parser.parse("sud", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         GameInputField.setText("");
-        DisplayOutputArea.append("\n>> sud\n");
+        DisplayOutputArea.append("\n>> sud\n\n");
         game.nextMove(p, this);
         
     }//GEN-LAST:event_SouthButtonActionPerformed
@@ -269,14 +278,14 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     private void WestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WestButtonActionPerformed
         ParserOutput p = parser.parse("ovest", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         GameInputField.setText("");
-        DisplayOutputArea.append("\n>> ovest\n");
+        DisplayOutputArea.append("\n>> ovest\n\n");
         game.nextMove(p, this);
     }//GEN-LAST:event_WestButtonActionPerformed
 
     private void NorthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NorthButtonActionPerformed
         ParserOutput p = parser.parse("nord", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         GameInputField.setText("");
-        DisplayOutputArea.append("\n>> nord\n");
+        DisplayOutputArea.append("\n>> nord\n\n");
         game.nextMove(p, this);
     }//GEN-LAST:event_NorthButtonActionPerformed
 
@@ -290,14 +299,14 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     private void EastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EastButtonActionPerformed
         ParserOutput p = parser.parse("est", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         GameInputField.setText("");
-        DisplayOutputArea.append("\n>> est\n");
+        DisplayOutputArea.append("\n>> est\n\n");
         game.nextMove(p, this);
     }//GEN-LAST:event_EastButtonActionPerformed
 
     private void LookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LookButtonActionPerformed
         ParserOutput p = parser.parse("osserva", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         GameInputField.setText("");
-        DisplayOutputArea.append("\n>> osserva\n");
+        DisplayOutputArea.append("\n>> osserva\n\n");
         game.nextMove(p, this);
     }//GEN-LAST:event_LookButtonActionPerformed
 
@@ -349,8 +358,16 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
    
     public void DisplayOutputSetText(String s) {
-         DisplayOutputArea.setText(s);
+         DisplayOutputArea.append(s);
     }
+    
+
+
+
+
+
+
+
 
 
    /* private void sendCommand() {
