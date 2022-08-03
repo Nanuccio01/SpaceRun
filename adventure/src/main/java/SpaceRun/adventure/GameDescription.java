@@ -50,7 +50,5 @@ public abstract class GameDescription {
     public abstract void init() throws Exception;
 
     public abstract void nextMove(ParserOutput p, SpaceRunJFrame spaceRunJFrame);
-    
-    public abstract void differentEnd(String command, SpaceRunJFrame spaceRunJFrame);
 
 }

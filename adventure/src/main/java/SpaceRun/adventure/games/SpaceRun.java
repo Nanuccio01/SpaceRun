@@ -18,6 +18,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -55,9 +58,6 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
         Command nord = new Command(CommandType.NORD, "nord");
         nord.setAlias(new String[]{"n", "N", "Nord", "NORD"});
         getCommands().add(nord);
-        Command iventory = new Command(CommandType.INVENTORY, "inventario");
-        iventory.setAlias(new String[]{"inv"});
-        getCommands().add(iventory);
         Command sud = new Command(CommandType.SOUTH, "sud");
         sud.setAlias(new String[]{"s", "S", "Sud", "SUD"});
         getCommands().add(sud);
@@ -67,6 +67,9 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
         Command ovest = new Command(CommandType.WEST, "ovest");
         ovest.setAlias(new String[]{"o", "O", "Ovest", "OVEST"});
         getCommands().add(ovest);
+        Command iventory = new Command(CommandType.INVENTORY, "inventario");
+        iventory.setAlias(new String[]{"inv"});
+        getCommands().add(iventory);
         Command end = new Command(CommandType.END, "end");
         end.setAlias(new String[]{"end", "fine", "esci", "muori", "ammazzati", "ucciditi", "suicidati", "exit"});
         getCommands().add(end);
@@ -88,8 +91,8 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
         Command turn_on = new Command(CommandType.TURN_ON, "accendi");
         turn_on.setAlias(new String[]{"attiva"});
         getCommands().add(turn_on);
-        Command mike = new Command(CommandType.MIKE, "Mike");
-        mike.setAlias(new String[]{"MIKE","mike"});
+        Command mike = new Command(CommandType.MIKE, "mike");
+        mike.setAlias(new String[]{"MIKE","Mike"});
         getCommands().add(mike);
         
         //Rooms
@@ -408,7 +411,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             } else if (p.getCommand().getType() == CommandType.OPEN) {
                 /*ATTENZIONE: quando un oggetto contenitore viene aperto, tutti gli oggetti contenuti
                 * vengongo inseriti nella stanza o nell'inventario a seconda di dove si trova l'oggetto contenitore.
-                * Potrebbe non esssere la soluzione ottimale.
+                * Potrebbe non essere la soluzione ottimale.
                  */
                 if (p.getObject() == null && p.getInvObject() == null) {
                     spaceRunJFrame.DisplayOutputSetText("Non c'è niente da aprire qui.");
@@ -466,16 +469,20 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                 if (p.getObject() != null && p.getObject().isPushable()) {
                     spaceRunJFrame.DisplayOutputSetText("Hai premuto: " + p.getObject().getName());
                     if (p.getObject().getId() == 3) {
-                        end();
+                        String message = end();
                     }
                 } else if (p.getInvObject() != null && p.getInvObject().isPushable()) {
                     spaceRunJFrame.DisplayOutputSetText("Hai premuto: " + p.getInvObject().getName());
                     if (p.getInvObject().getId() == 3) {
-                        end();
+                        String message = end();
                     }
                 } else {
                     spaceRunJFrame.DisplayOutputSetText("Non ci sono oggetti che puoi premere qui.");
                 }
+            }  else if (p.getCommand().getType() == CommandType.END) {
+                String message = differentEnd(p.getCommand().getName());
+                spaceRunJFrame.DisplayOutputSetText(message);
+            
             }
             if (noroom) {
                  if (p.getCommand().getType() == CommandType.NORD && getCurrentRoom().getNorth() == null && getCurrentRoom().getId() == 2) {
@@ -508,30 +515,31 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
         }
     }
 
-    private void end() {
-        System.out.print("Finalmente la navicella si alza in aria, inizi a guidarla sbattendo da destra a sinistra lungo le pareti del porto spaziale."
+    private String end() {
+        String message = ("Finalmente la navicella si alza in aria, inizi a guidarla sbattendo da destra a sinistra lungo le pareti del porto spaziale."
                 + " Vedi del fumo fuoriuscire da reattore danneggiato, ma ormai ti hanno scoperto tutti non puoi tornare indietro."
                 + " Una grande flotta di navicelle armate aliene si innalza cercando di colpirti con i loro cannoni, ma involontariamente hai già messo il pilota automatico verso la terra e sparisci in un tunnel supersonico dinanzi ai loro occhi. "
                 + "Ripensi a Mike, sai che ti ha aiutato abbastanza, ma non c’era spazio per lui. "
                 + "Non sai nemmeno se fosse la scelta giusta da fare, ma solo una cosa è certa… Ci si vede alieni! A mai più!");
-        System.exit(0);
+        spaceRunJFrame.DisplayOutputSetText("\nAddio!");
+    return message;
     }
     
-        @Override
-        public void differentEnd (String command, SpaceRunJFrame spaceRunJFrame) {
-
+        public String differentEnd (String command) {
+            String message = "";
             switch (command) {
                 case "suicidati": case "ammazzati": case "ucciditi":
-                    spaceRunJFrame.DisplayOutputSetText("Decidi di correre contro gli alieni per porre fine alle tue sofferenze.\n L'aria dello spazio gioca brutti scherzi. ");
+                    message = ("Decidi di correre contro gli alieni per porre fine alle tue sofferenze.\n L'aria dello spazio gioca brutti scherzi. ");
                 break;
                 
                 case "muori":
-                    spaceRunJFrame.DisplayOutputSetText("Infarto istantaneo. E' stato rapido ed indolore.");
+                    message = ("Infarto istantaneo. E' stato rapido ed indolore.");
                 break;
   
                 case "end": case "fine": case "exit": case "esci":
-                    spaceRunJFrame.DisplayOutputSetText("Se l'umanità avesse una speranza, adesso non ce l'ha più...");
+                    message = ("Se l'umanità avesse una speranza, adesso non ce l'ha più...");
                 break;
             }
+            return message;
         }
 }

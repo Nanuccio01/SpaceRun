@@ -185,7 +185,6 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SpaceRun");
 
-        GameInputField.setText("Inserisci comando..."); // NOI18N
         GameInputField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 GameInputFieldActionPerformed(evt);
@@ -340,11 +339,15 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
 
     private void EnterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterButtonActionPerformed
 
-        sendCommand();
+        String command = GameInputField.getText();
 
-        //checkEnd();
+        ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
+        
+        GameInputField.setText("");
 
-        String command = evt.getActionCommand();
+        DisplayOutputArea.append("\n>> " + command + "\n\n");
+
+        game.nextMove(p, this);
 
     }//GEN-LAST:event_EnterButtonActionPerformed
 
@@ -397,6 +400,10 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
         String command = evt.getActionCommand();
 
         ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
+        
+        GameInputField.setText("");
+
+        DisplayOutputArea.append("\n>> " + command + "\n\n");
 
         game.nextMove(p, this);
 
@@ -443,6 +450,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_LookButtonActionPerformed
 
     private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed
+        sendCommand();
         saveGame();
     }//GEN-LAST:event_SaveButtonActionPerformed
 
@@ -451,9 +459,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     /**
 
      * @param args the command line arguments
-
      */
-
     public static void main(String args[]) {
 
         /* Set the Nimbus look and feel */
@@ -537,15 +543,8 @@ private void sendCommand() {
             String command = GameInputField.getText();
             ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
             GameInputField.setText("");
-
-
-            if (p.getCommand() != null && p.getCommand().getType() == CommandType.END) {
-                    game.differentEnd(command, this);
-                    DisplayOutputArea.append("\nAddio!");
-                    DisplayOutputArea.setCaretPosition(DisplayOutputArea.getDocument().getLength());
-                    System.exit(0);
-                
-            } else if (p.getCommand() != null && p.getCommand().getType() == CommandType.SAVE) {
+            
+            if (p.getCommand() != null && p.getCommand().getType() == CommandType.SAVE) {
                     saveGame(); 
 
                /* } else if (p.getCommand() != null && p.getCommand().getType() == CommandType.LOAD) {
