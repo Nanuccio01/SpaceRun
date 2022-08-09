@@ -18,9 +18,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 
 /**
@@ -67,9 +65,6 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
         Command ovest = new Command(CommandType.WEST, "ovest");
         ovest.setAlias(new String[]{"o", "O", "Ovest", "OVEST"});
         getCommands().add(ovest);
-        Command iventory = new Command(CommandType.INVENTORY, "inventario");
-        iventory.setAlias(new String[]{"inv"});
-        getCommands().add(iventory);
         Command end = new Command(CommandType.END, "end");
         end.setAlias(new String[]{"end", "fine", "esci", "muori", "ammazzati", "ucciditi", "suicidati", "exit"});
         getCommands().add(end);
@@ -382,16 +377,16 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                 } else {
                     noroom = true;
                 }
-            } else if (p.getCommand().getType() == CommandType.INVENTORY) {
-                boolean isNotEmpty = getInventory() != null && !getInventory().isEmpty();
-                if(isNotEmpty){
-                    spaceRunJFrame.DisplayOutputSetText("Nel tuo inventario ci sono:");
-                    for (AdvObject o : getInventory()) {
-                        spaceRunJFrame.DisplayOutputSetText(o.getName() + ": " + o.getDescription());
-                    }
-                } else spaceRunJFrame.DisplayOutputSetText("Inventario vuoto, sarà ora che ti sbrighi se vuoi trovare una via di fuga...");  
             } else if (p.getCommand().getType() == CommandType.LOOK_AT) {
-                if (getCurrentRoom().getLook() != null) {
+                 if (p.getObject() != null) {
+                    if (p.getObject().isOpenable() == true && p.getObject().isOpen() == false && (p.getObject().getName().contains("cassetto") || p.getObject().getName().contains("compartimento"))) {
+                        spaceRunJFrame.DisplayOutputSetText(p.getObject().getName() + " è chiuso");
+                    } else {
+                        spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription());
+                    }
+                } else if (p.getInvObject() != null) {
+                    spaceRunJFrame.DisplayOutputSetText(p.getInvObject().getDescription());
+                } else if (getCurrentRoom().getLook() != null) {
                     spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getLook());
                 } else {
                     spaceRunJFrame.DisplayOutputSetText("Non c'è niente di interessante qui.");
