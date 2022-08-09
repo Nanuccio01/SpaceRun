@@ -470,11 +470,13 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                     spaceRunJFrame.DisplayOutputSetText("Hai premuto: " + p.getObject().getName());
                     if (p.getObject().getId() == 3) {
                         String message = end();
+                        spaceRunJFrame.DisplayOutputSetText("\nAddio!");
                     }
                 } else if (p.getInvObject() != null && p.getInvObject().isPushable()) {
                     spaceRunJFrame.DisplayOutputSetText("Hai premuto: " + p.getInvObject().getName());
                     if (p.getInvObject().getId() == 3) {
                         String message = end();
+                        spaceRunJFrame.DisplayOutputSetText("\nAddio!");
                     }
                 } else {
                     spaceRunJFrame.DisplayOutputSetText("Non ci sono oggetti che puoi premere qui.");
@@ -482,7 +484,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             }  else if (p.getCommand().getType() == CommandType.END) {
                 String message = differentEnd(p.getCommand().getName());
                 spaceRunJFrame.DisplayOutputSetText(message);
-            
+                spaceRunJFrame.DisplayOutputSetText("\nAddio!"); //inserire menu di uscita, salvataggio, resart partita
             }
             if (noroom) {
                  if (p.getCommand().getType() == CommandType.NORD && getCurrentRoom().getNorth() == null && getCurrentRoom().getId() == 2) {
@@ -521,7 +523,6 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                 + " Una grande flotta di navicelle armate aliene si innalza cercando di colpirti con i loro cannoni, ma involontariamente hai già messo il pilota automatico verso la terra e sparisci in un tunnel supersonico dinanzi ai loro occhi. "
                 + "Ripensi a Mike, sai che ti ha aiutato abbastanza, ma non c’era spazio per lui. "
                 + "Non sai nemmeno se fosse la scelta giusta da fare, ma solo una cosa è certa… Ci si vede alieni! A mai più!");
-        spaceRunJFrame.DisplayOutputSetText("\nAddio!");
     return message;
     }
     

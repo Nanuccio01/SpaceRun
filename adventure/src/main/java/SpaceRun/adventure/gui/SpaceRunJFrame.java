@@ -727,6 +727,7 @@ private void sendCommand() {
                 }  
                 return saved;      //variabile booleana per il salvataggio
     }
+    
     private void loadGame(){
         try {
   
