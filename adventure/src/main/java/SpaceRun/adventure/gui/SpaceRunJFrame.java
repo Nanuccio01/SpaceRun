@@ -24,11 +24,8 @@ import SpaceRun.adventure.type.Inventory;
 import SpaceRun.adventure.GameDescription;
 import SpaceRun.adventure.Utils;
 import static com.sun.tools.javac.util.StringUtils.toUpperCase;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Set;
-import javax.swing.JOptionPane;
-import javax.swing.Timer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -36,8 +33,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
-import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.YES_OPTION;
 
 
 

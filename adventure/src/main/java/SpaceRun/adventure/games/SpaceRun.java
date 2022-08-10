@@ -204,7 +204,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             lineObjects = brObjects.readLine(); //0
             setParam = lineObjects.split("#");
             AdvObjectContainer backpack = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); 
-            backpack.setAlias(new String[]{"zainetto", "zaino", "backpack"});
+            backpack.setAlias(new String[]{"zainetto", "backpack"});
             backpack.setOpenable(true);
             incubators.getObjects().add(backpack);
             
@@ -217,15 +217,17 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             lineObjects = brObjects.readLine(); //2
             setParam = lineObjects.split("#");
             AdvObjectContainer drawer = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            drawer.setAlias(new String[]{"tiretto", "robot"});
+            drawer.setAlias(new String[]{"tiretto"});
             drawer.setOpenable(true);
+            drawer.setPickupable(false);
             warehouse.getObjects().add(drawer);
             
             lineObjects = brObjects.readLine(); //3
             setParam = lineObjects.split("#");
             AdvObjectContainer box = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            box.setAlias(new String[]{});
+            box.setAlias(new String[]{"scatolo"});
             box.setOpenable(true);
+            box.setPickupable(false);
             drawer.add(box);
             
             lineObjects = brObjects.readLine(); //4
@@ -264,7 +266,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             lineObjects = brObjects.readLine(); //9
             setParam = lineObjects.split("#");
             AdvObject pen = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            pen.setAlias(new String[]{});
+            pen.setAlias(new String[]{"scatola","scatolo"});
             pen.setPickupable(false);
             box.add(pen);
             
@@ -273,6 +275,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             AdvObjectContainer uniforms = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
             uniforms.setAlias(new String[]{"vestiti","panni","mucchio di robe"});
             uniforms.setOpenable(true);
+            uniforms.setPickupable(false);
             dormitory.getObjects().add(uniforms);
             
             lineObjects = brObjects.readLine(); //11
@@ -379,8 +382,8 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                 }
             } else if (p.getCommand().getType() == CommandType.LOOK_AT) {
                  if (p.getObject() != null) {
-                    if (p.getObject().isOpenable() == true && p.getObject().isOpen() == false && (p.getObject().getName().contains("cassetto") || p.getObject().getName().contains("compartimento"))) {
-                        spaceRunJFrame.DisplayOutputSetText(p.getObject().getName() + " è chiuso");
+                    if (p.getObject().isOpenable() == true && p.getObject().isOpen() == false ) {
+                        spaceRunJFrame.DisplayOutputSetText(p.getObject().getName() + " chiuso");
                     } else {
                         spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription());
                     }
@@ -396,7 +399,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                     if (p.getObject().isPickupable()) {
                         getInventory().add(p.getObject());
                         getCurrentRoom().getObjects().remove(p.getObject());
-                        spaceRunJFrame.DisplayOutputSetText("Hai raccolto: " + p.getObject().getDescription());
+                        spaceRunJFrame.DisplayOutputSetText("Hai raccolto: " + p.getObject().getName());
                     } else {
                         spaceRunJFrame.DisplayOutputSetText("Non puoi raccogliere questo oggetto.");
                     }
@@ -417,7 +420,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                                 spaceRunJFrame.DisplayOutputSetText("Hai aperto: " + p.getObject().getName());
                                 AdvObjectContainer c = (AdvObjectContainer) p.getObject();
                                 if (!c.getList().isEmpty()) {
-                                    spaceRunJFrame.DisplayOutputSetText(c.getName() + " contiene:");
+                                    spaceRunJFrame.DisplayOutputSetText("\n" + c.getName() + " contiene:");
                                     Iterator<AdvObject> it = c.getList().iterator();
                                     while (it.hasNext()) {
                                         AdvObject next = it.next();
@@ -440,7 +443,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                             if (p.getInvObject() instanceof AdvObjectContainer) {
                                 AdvObjectContainer c = (AdvObjectContainer) p.getInvObject();
                                 if (!c.getList().isEmpty()) {
-                                    spaceRunJFrame.DisplayOutputSetText(c.getName() + " contiene:");
+                                    spaceRunJFrame.DisplayOutputSetText("\n" + c.getName() + " contiene:");
                                     Iterator<AdvObject> it = c.getList().iterator();
                                     while (it.hasNext()) {
                                         AdvObject next = it.next();
