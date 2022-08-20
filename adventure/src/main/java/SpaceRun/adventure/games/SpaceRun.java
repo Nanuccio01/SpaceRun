@@ -14,6 +14,7 @@ import SpaceRun.adventure.type.AdvObjectContainer;
 import SpaceRun.adventure.type.Command;
 import SpaceRun.adventure.type.CommandType;
 import SpaceRun.adventure.type.Room;
+import static com.sun.tools.javac.util.StringUtils.toUpperCase;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -206,6 +207,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             AdvObjectContainer backpack = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); 
             backpack.setAlias(new String[]{"zainetto", "backpack"});
             backpack.setOpenable(true);
+            backpack.setPickupable(false);
             incubators.getObjects().add(backpack);
             
             lineObjects = brObjects.readLine(); //1
@@ -322,7 +324,6 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             //Set starting room
             setCurrentRoom(incubators);
         } catch (IOException e) {
-            System.out.println(e);
             System.exit(0);
         }
 }
@@ -399,7 +400,8 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                     if (p.getObject().isPickupable()) {
                         getInventory().add(p.getObject());
                         getCurrentRoom().getObjects().remove(p.getObject());
-                        spaceRunJFrame.DisplayOutputSetText("Hai raccolto: " + p.getObject().getName());
+                        spaceRunJFrame.DisplayOutputSetText("Hai raccolto: " + p.getObject().getName()+ " ->" + p.getObject().getDescription());
+                        spaceRunJFrame.InventoryOutputSetText("  "+ p.getObject().getName() + "\n");
                     } else {
                         spaceRunJFrame.DisplayOutputSetText("Non puoi raccogliere questo oggetto.");
                     }
@@ -441,6 +443,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                     if (p.getInvObject() != null) {
                         if (p.getInvObject().isOpenable() && p.getInvObject().isOpen() == false) {
                             if (p.getInvObject() instanceof AdvObjectContainer) {
+                                spaceRunJFrame.DisplayOutputSetText("Hai aperto nell' inventario: " + p.getInvObject().getName());
                                 AdvObjectContainer c = (AdvObjectContainer) p.getInvObject();
                                 if (!c.getList().isEmpty()) {
                                     spaceRunJFrame.DisplayOutputSetText("\n" + c.getName() + " contiene:");
@@ -448,6 +451,9 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                                     while (it.hasNext()) {
                                         AdvObject next = it.next();
                                         getInventory().add(next);
+                                        if (next.isPickupable()) {
+                                            spaceRunJFrame.InventoryOutputSetText("  "+ next.getName() + "\n");
+                                        }
                                         spaceRunJFrame.DisplayOutputSetText(" " + next.getName());
                                         it.remove();
                                     }
@@ -456,7 +462,6 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                             } else {
                                 p.getInvObject().setOpen(true);
                             }
-                            spaceRunJFrame.DisplayOutputSetText("Hai aperto nel tuo inventario: " + p.getInvObject().getName());
                         } else {
                             spaceRunJFrame.DisplayOutputSetText("Non puoi aprire questo oggetto.");
                         }
@@ -499,7 +504,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                  }
             } else if (blocked) {
                 if (p.getCommand().getType() == CommandType.SOUTH && getCurrentRoom().getSouth().isLocked() == true && getCurrentRoom().getId() == 4) {
-                    spaceRunJFrame.DisplayOutputSetText("Ti sbagliavi, questa stanza è chiusa, e serve una tessera di riconoscimento per entrare. \n");
+                    spaceRunJFrame.DisplayOutputSetText("Ti sbagli, questa stanza è chiusa, e serve una tessera di riconoscimento per entrare. \n");
                 } else if (p.getCommand().getType() == CommandType.WEST && getCurrentRoom().getWest().isLocked() == true && getCurrentRoom().getId() == 10) {
                     spaceRunJFrame.DisplayOutputSetText(" Giri la testa e noti subito che non sei solo… C’è una guardia aliena che sorveglia una porta. Assicurati che tu sappia come affrontare la guardia, non sono molto socievoli! \n ");
                 } else if (p.getCommand().getType() == CommandType.NORD && getCurrentRoom().getNorth().isLocked() == true && getCurrentRoom().getId() == 5) {
