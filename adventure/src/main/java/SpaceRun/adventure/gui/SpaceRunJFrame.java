@@ -226,6 +226,11 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
         });
 
         LoadButton.setText("CARICA");
+        LoadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoadButtonActionPerformed(evt);
+            }
+        });
 
         WestButton.setText("OVEST");
         WestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -440,9 +445,25 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_LookButtonActionPerformed
 
     private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed
-        sendCommand();
-        saveGame();
+        ParserOutput p = parser.parse("salva", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
+
+        GameInputField.setText("");
+
+        DisplayOutputArea.append("\n>> salva\n\n");
+
+        game.nextMove(p, this, null);
     }//GEN-LAST:event_SaveButtonActionPerformed
+
+    private void LoadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadButtonActionPerformed
+       
+        ParserOutput p = parser.parse("carica", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
+
+        GameInputField.setText("");
+
+        DisplayOutputArea.append("\n>> carica\n\n");
+
+        game.nextMove(p, this, null);
+    }//GEN-LAST:event_LoadButtonActionPerformed
 
 
 
@@ -534,7 +555,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     }
 
 
-private void sendCommand() {
+ /* private void sendCommand() {
         if (GameInputField.getText().length() > 0) {
             String command = GameInputField.getText();
             ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
@@ -543,7 +564,7 @@ private void sendCommand() {
             if (p.getCommand() != null && p.getCommand().getType() == CommandType.SAVE) {
                     saveGame(); 
 
-               /* } else if (p.getCommand() != null && p.getCommand().getType() == CommandType.LOAD) {
+               } else if (p.getCommand() != null && p.getCommand().getType() == CommandType.LOAD) {
                     
                     DisplayOutputArea.append("\nChe partita vuoi caricare? Digita il nome della partita");
                     try{
@@ -649,7 +670,7 @@ private void sendCommand() {
                 updateInventory();
                 saved = false;
 
-                checkEnd(); */
+                checkEnd(); 
                 }
             }
         }
@@ -737,5 +758,5 @@ private void sendCommand() {
         } catch (SQLException ex) {
                     System.err.println(ex.getSQLState() + ": " + ex.getMessage());
         }
-    }
+    }*/
 }
