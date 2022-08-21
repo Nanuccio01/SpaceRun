@@ -16,11 +16,7 @@ import SpaceRun.adventure.games.SpaceRun;
 import SpaceRun.adventure.parser.Parser;
 import SpaceRun.adventure.parser.ParserOutput;
 import SpaceRun.adventure.type.CommandType;
-import SpaceRun.adventure.type.Command;
-import SpaceRun.adventure.type.Room;
 import SpaceRun.adventure.type.AdvObject;
-import SpaceRun.adventure.type.AdvObjectContainer;
-import SpaceRun.adventure.type.Inventory;
 import SpaceRun.adventure.GameDescription;
 import SpaceRun.adventure.Utils;
 import static com.sun.tools.javac.util.StringUtils.toUpperCase;
@@ -106,7 +102,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
 
             // Visualizzazione messaggi iniziali
 
-            DisplayOutputArea.append("\t\t   !!! BENVENUTI IN SPACERUN !!!\n\n");
+            DisplayOutputArea.append("\t\t\t  !!! BENVENUTI IN SPACERUN !!!\n\n");
 
             DisplayOutputArea.append("Ti trovi su un’astronave viscida e cupa, si riescono a distinguere solo le luci di pulsanti e sirene costantemente in funzione. "
 
@@ -336,11 +332,12 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
 
         ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         
+        
         GameInputField.setText("");
 
         DisplayOutputArea.append("\n>> " + command + "\n\n");
 
-        game.nextMove(p, this);
+        game.nextMove(p, this, command);
 
     }//GEN-LAST:event_EnterButtonActionPerformed
 
@@ -354,7 +351,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
 
         DisplayOutputArea.append("\n>> sud\n\n");
 
-        game.nextMove(p, this);
+        game.nextMove(p, this, null);
 
     }//GEN-LAST:event_SouthButtonActionPerformed
 
@@ -368,7 +365,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
 
         DisplayOutputArea.append("\n>> ovest\n\n");
 
-        game.nextMove(p, this);
+        game.nextMove(p, this, null);
 
     }//GEN-LAST:event_WestButtonActionPerformed
 
@@ -382,7 +379,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
 
         DisplayOutputArea.append("\n>> nord\n\n");
 
-        game.nextMove(p, this);
+        game.nextMove(p, this, null);
 
     }//GEN-LAST:event_NorthButtonActionPerformed
 
@@ -398,7 +395,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
 
         DisplayOutputArea.append("\n>> " + command + "\n\n");
 
-        game.nextMove(p, this);
+        game.nextMove(p, this, command);
 
     }//GEN-LAST:event_GameInputFieldActionPerformed
 
@@ -412,7 +409,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
 
         DisplayOutputArea.append("\n>> est\n\n");
 
-        game.nextMove(p, this);
+        game.nextMove(p, this, null);
 
     }//GEN-LAST:event_EastButtonActionPerformed
 
@@ -428,7 +425,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
 
         if(game.getCurrentRoom().isVisible() ==true){
 
-            game.nextMove(p, this);
+            game.nextMove(p, this, null);
 
         } else {
 
@@ -529,6 +526,11 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     
     public void InventoryOutputSetText(String s) {
          InventoryTextArea.append(s);
+    }
+    
+    public String GameInputFieldGetText() {
+         String command = GameInputField.getText();
+         return command;
     }
 
 

@@ -5,7 +5,6 @@
  */
 package SpaceRun.adventure.games;
 
-import static com.sun.tools.javac.util.StringUtils.toUpperCase;
 import SpaceRun.adventure.GameDescription;
 import SpaceRun.adventure.gui.SpaceRunJFrame;
 import SpaceRun.adventure.parser.ParserOutput;
@@ -90,6 +89,12 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
         Command mike = new Command(CommandType.MIKE, "mike");
         mike.setAlias(new String[]{"MIKE","Mike"});
         getCommands().add(mike);
+        Command save = new Command(CommandType.SAVE, "salva");
+        mike.setAlias(new String[]{"salvataggio"});
+        getCommands().add(save);
+        Command load = new Command(CommandType.LOAD, "carica");
+        mike.setAlias(new String[]{"riprendi"});
+        getCommands().add(load);
         
         //Rooms
         try{
@@ -329,7 +334,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
 }
 
     @Override
-    public void nextMove(ParserOutput p, SpaceRunJFrame spaceRunJFrame) {
+    public void nextMove(ParserOutput p, SpaceRunJFrame spaceRunJFrame, String command) {
         if (p.getCommand() == null) {
             spaceRunJFrame.DisplayOutputSetText("Non ho capito cosa devo fare! Prova con un altro comando.");
         } else {
@@ -485,9 +490,14 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                     spaceRunJFrame.DisplayOutputSetText("Non ci sono oggetti che puoi premere qui.");
                 }
             }  else if (p.getCommand().getType() == CommandType.END) {
-                String message = differentEnd(p.getCommand().getName());
+                String message = differentEnd(command);
                 spaceRunJFrame.DisplayOutputSetText(message);
                 spaceRunJFrame.DisplayOutputSetText("\nAddio!"); //inserire menu di uscita, salvataggio, resart partita
+                /*spaceRunJFrame.DisplayOutputSetText("\n\nPartita terminata desideri chiudere la finestra? si|no");
+                String risposta = spaceRunJFrame.GameInputFieldGetText();
+                if ("si".equals(risposta)){
+                    System.exit(0);
+                } */
             }
             if (noroom) {
                  if (p.getCommand().getType() == CommandType.NORD && getCurrentRoom().getNorth() == null && getCurrentRoom().getId() == 2) {
@@ -533,7 +543,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             String message = "";
             switch (command) {
                 case "suicidati": case "ammazzati": case "ucciditi":
-                    message = ("Decidi di correre contro gli alieni per porre fine alle tue sofferenze.\n L'aria dello spazio gioca brutti scherzi. ");
+                    message = ("Decidi di correre contro gli alieni per porre fine alle tue sofferenze.\nL'aria dello spazio gioca brutti scherzi. ");
                 break;
                 
                 case "muori":
