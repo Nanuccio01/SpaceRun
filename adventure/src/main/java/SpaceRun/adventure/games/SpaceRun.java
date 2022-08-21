@@ -6,6 +6,8 @@
 package SpaceRun.adventure.games;
 
 import SpaceRun.adventure.GameDescription;
+import SpaceRun.adventure.gui.ExitJDialog;
+
 import SpaceRun.adventure.gui.SpaceRunJFrame;
 import SpaceRun.adventure.parser.ParserOutput;
 import SpaceRun.adventure.type.AdvObject;
@@ -36,7 +38,6 @@ import java.util.Iterator;
  * @author pierpaolo
  */
 public class SpaceRun extends GameDescription { //aggiunta abstract per errore
-
     @Override
     public void init() throws Exception {
         
@@ -493,11 +494,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                 String message = differentEnd(command);
                 spaceRunJFrame.DisplayOutputSetText(message);
                 spaceRunJFrame.DisplayOutputSetText("\nAddio!"); //inserire menu di uscita, salvataggio, resart partita
-                /*spaceRunJFrame.DisplayOutputSetText("\n\nPartita terminata desideri chiudere la finestra? si|no");
-                String risposta = spaceRunJFrame.GameInputFieldGetText();
-                if ("si".equals(risposta)){
-                    System.exit(0);
-                } */
+                spaceRunJFrame.ExitDialog();   
             }
             if (noroom) {
                  if (p.getCommand().getType() == CommandType.NORD && getCurrentRoom().getNorth() == null && getCurrentRoom().getId() == 2) {
