@@ -329,6 +329,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                        
             //Set starting room
             setCurrentRoom(incubators);
+            incubators.setVisited(true);
         } catch (IOException e) {
             System.exit(0);
         }
@@ -522,8 +523,11 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             } else if (move) {
                     spaceRunJFrame.DisplayOutputSetText("Ora ti trovi in: " + toUpperCase(getCurrentRoom().getName()));
                     spaceRunJFrame.DisplayOutputSetText("\n==================================================================\n");
-                    spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getDescription() + "\n");    
+                    spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getDescription() + "\n");
+                    getCurrentRoom().setVisited(true);
             }
+        } if (getCurrentRoom().isVisited() == true && getCurrentRoom().getId() == 1){
+            getCurrentRoom().setDescription("Sei nel luungo principale corridoio desolato dell’astronave... Senti dei rumori da ovest, sembrano suoni terribili, non sai da dove vuoi procedere...");
         }
     }
 
