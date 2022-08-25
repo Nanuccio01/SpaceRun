@@ -12,6 +12,9 @@ import SpaceRun.adventure.GameDescription;
 import SpaceRun.adventure.Utils;
 import static com.sun.tools.javac.util.StringUtils.toUpperCase;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -19,7 +22,11 @@ import java.util.Set;
  *@author Gaetano
  */
 
-public class SpaceRunJFrame extends javax.swing.JFrame {
+public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
+    
+    int hour, minute, second;
+
+    
     private final ExitJDialog exitDialog  = new ExitJDialog(this, true);
 
     private final GameDescription game;
@@ -29,20 +36,32 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     private boolean saved = true;
 
     public static final String SPACERUN_DB = "CREATE TABLE IF NOT EXISTS spaceRunDB (PartitaId VARCHAR PRIMARY KEY, currentRoom INT, inventoryId VARCHAR(100))";
+    
+ 
+    
 
+
+    
     /**
      * Creates new form SpaceRunJFrame
      */
 
     public SpaceRunJFrame() {
         initComponents();
-
+        
+        Thread t = new Thread(this);
+        t.start();
+        
+       
         DisplayOutputArea.setLineWrap(true);
         DisplayOutputArea.setWrapStyleWord(true);
         InventoryTextArea.setLineWrap(true);
         InventoryTextArea.setWrapStyleWord(true);
 
+        
+
         this.game = new SpaceRun();
+
 
         try {
             this.game.init();
@@ -68,10 +87,14 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
             //Inizializzazione della visualizzazione dell'inventario
             InventoryTextArea.setText("      Zainetto");
             InventoryTextArea.append("\n---------------------\n");
-            
+        
+        //Thread time= new Time();
+        //time.start();  // riprovare errore solo puntini o solo minuti
         }catch (Exception ex) {
             System.err.println(ex);
-        }  
+        }
+        
+
     }
 
 
@@ -421,6 +444,23 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     private javax.swing.JButton WestButton;
     // End of variables declaration//GEN-END:variables
 
+    
+        @Override
+        public void run(){
+        while (true){
+            Calendar cal = Calendar.getInstance();
+            hour = cal.get(Calendar.HOUR_OF_DAY);
+            minute = cal.get(Calendar.MINUTE);
+            second = cal.get(Calendar.SECOND);
+            
+            SimpleDateFormat sdf24 = new SimpleDateFormat("HH:mm:ss");
+            Date dat = cal.getTime();
+            String time24 = sdf24.format(dat);
+            
+             TimeTextArea.setText(time24);
+            
+         }
+    } 
     public void DisplayOutputSetText(String s) {
          DisplayOutputArea.append(s);
     }
@@ -432,6 +472,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame {
     public void ExitDialog() {
          exitDialog.setVisible(true);
     }
+    
 
 
  /* private void sendCommand() {
