@@ -10,11 +10,13 @@ import SpaceRun.adventure.parser.Parser;
 import SpaceRun.adventure.parser.ParserOutput;
 import SpaceRun.adventure.GameDescription;
 import SpaceRun.adventure.Utils;
+import SpaceRun.adventure.type.Command;
 import static com.sun.tools.javac.util.StringUtils.toUpperCase;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,24 +26,12 @@ import java.util.Set;
 
 public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
     
-    int hour, minute, second;
-
-    
     private final ExitJDialog exitDialog  = new ExitJDialog(this, true);
-
     private final GameDescription game;
-
     private final Parser parser;
-
     private boolean saved = true;
-
     public static final String SPACERUN_DB = "CREATE TABLE IF NOT EXISTS spaceRunDB (PartitaId VARCHAR PRIMARY KEY, currentRoom INT, inventoryId VARCHAR(100))";
-    
- 
-    
 
-
-    
     /**
      * Creates new form SpaceRunJFrame
      */
@@ -52,16 +42,12 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         Thread t = new Thread(this);
         t.start();
         
-       
         DisplayOutputArea.setLineWrap(true);
         DisplayOutputArea.setWrapStyleWord(true);
         InventoryTextArea.setLineWrap(true);
         InventoryTextArea.setWrapStyleWord(true);
 
-        
-
         this.game = new SpaceRun();
-
 
         try {
             this.game.init();
@@ -72,7 +58,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         parser = new Parser(stopwords);
         try{
             // Visualizzazione messaggi iniziali
-            DisplayOutputArea.append("\t\t\t  !!! BENVENUTI IN SPACERUN !!!\n\n");
+            DisplayOutputArea.append("\t\t\t   !!! BENVENUTI IN SPACERUN !!!\n\n");
             DisplayOutputArea.append("Ti trovi su un’astronave viscida e cupa, si riescono a distinguere solo le luci di pulsanti e sirene costantemente in funzione. "
                 + "\nChi ti ha catturato? Come sei entrato lì? Perché sei mezzo morto? Non sai niente di niente. "
                 + "\nHai già osservato qualcosa in pochi momenti di vita e ti sembra di aver visto Alieni alti due metri che sembrano aver la funzione di dottori studianti specie viventi di tutto l’universo."
@@ -87,17 +73,11 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
             //Inizializzazione della visualizzazione dell'inventario
             InventoryTextArea.setText("      Zainetto");
             InventoryTextArea.append("\n---------------------\n");
-        
-        //Thread time= new Time();
-        //time.start();  // riprovare errore solo puntini o solo minuti
+            
         }catch (Exception ex) {
             System.err.println(ex);
         }
-        
-
     }
-
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -121,8 +101,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         EastButton = new javax.swing.JButton();
         InventoryTextAreaJsp = new javax.swing.JScrollPane();
         InventoryTextArea = new javax.swing.JTextArea();
-        TimeTextAreaJsp = new javax.swing.JScrollPane();
-        TimeTextArea = new javax.swing.JTextArea();
+        jTimeField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SpaceRun");
@@ -145,6 +124,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         DisplayOutputAreaJsp.setVerifyInputWhenFocusTarget(false);
         DisplayOutputAreaJsp.setWheelScrollingEnabled(false);
 
+        DisplayOutputArea.setEditable(false);
         DisplayOutputArea.setBackground(new java.awt.Color(0, 0, 0));
         DisplayOutputArea.setColumns(20);
         DisplayOutputArea.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 14)); // NOI18N
@@ -229,6 +209,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
             }
         });
 
+        InventoryTextArea.setEditable(false);
         InventoryTextArea.setBackground(new java.awt.Color(0, 0, 0));
         InventoryTextArea.setColumns(20);
         InventoryTextArea.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 14)); // NOI18N
@@ -239,11 +220,11 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         InventoryTextArea.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         InventoryTextAreaJsp.setViewportView(InventoryTextArea);
 
-        TimeTextArea.setBackground(new java.awt.Color(0, 0, 0));
-        TimeTextArea.setColumns(20);
-        TimeTextArea.setForeground(new java.awt.Color(51, 255, 0));
-        TimeTextArea.setRows(5);
-        TimeTextAreaJsp.setViewportView(TimeTextArea);
+        jTimeField.setEditable(false);
+        jTimeField.setBackground(new java.awt.Color(0, 0, 0));
+        jTimeField.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 18)); // NOI18N
+        jTimeField.setForeground(new java.awt.Color(51, 255, 0));
+        jTimeField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -253,47 +234,38 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(EastButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(WestButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(53, 53, 53)
-                        .addComponent(NorthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(53, 53, 53)
-                        .addComponent(SouthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(LookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TimeTextAreaJsp, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(InventoryTextAreaJsp, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(LoadButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(SaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(DisplayOutputAreaJsp, javax.swing.GroupLayout.DEFAULT_SIZE, 685, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(GameInputField)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(EnterButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(SaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(GameInputField, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(EnterButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(EastButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(WestButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(InventoryTextAreaJsp, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(47, 47, 47)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(NorthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(SouthButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jTimeField))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(DisplayOutputAreaJsp))))
+                    .addComponent(LookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(DisplayOutputAreaJsp, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(GameInputField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(EnterButton)
-                            .addComponent(SaveButton)
-                            .addComponent(LoadButton)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(InventoryTextAreaJsp, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -306,9 +278,19 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
                         .addComponent(SouthButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(LookButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(TimeTextAreaJsp, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(DisplayOutputAreaJsp, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(SaveButton)
+                        .addComponent(LoadButton))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(GameInputField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(EnterButton))
+                        .addContainerGap())))
         );
 
         pack();
@@ -316,13 +298,17 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
 
     private void EnterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterButtonActionPerformed
         String command = GameInputField.getText();
-        ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
-        GameInputField.setText("");
-        DisplayOutputArea.append("\n>> " + command + "\n\n");
-        game.nextMove(p, this, command);
+       /* List<Command> commands = game.getCommands();
+        for (int i = 0; i < game.getCommands().size(); i++) {
+            if (commands.get(i).getName().equals(command) || commands.get(i).getAlias().contains(command)) {
+                ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
+                GameInputField.setText("");
+                DisplayOutputArea.append("\n>> " + command + "\n\n");
+                game.nextMove(p, this, command);
+            } else {DisplayOutputArea.append("Sbagliat");
+            }
+        }*/
     }//GEN-LAST:event_EnterButtonActionPerformed
-
-
 
     private void SouthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SouthButtonActionPerformed
         ParserOutput p = parser.parse("sud", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
@@ -331,8 +317,6 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         game.nextMove(p, this, null);
     }//GEN-LAST:event_SouthButtonActionPerformed
 
-
-
     private void WestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WestButtonActionPerformed
         ParserOutput p = parser.parse("ovest", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         GameInputField.setText("");
@@ -340,16 +324,12 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         game.nextMove(p, this, null);
     }//GEN-LAST:event_WestButtonActionPerformed
 
-
-
     private void NorthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NorthButtonActionPerformed
         ParserOutput p = parser.parse("nord", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         GameInputField.setText("");
         DisplayOutputArea.append("\n>> nord\n\n");
         game.nextMove(p, this, null);
     }//GEN-LAST:event_NorthButtonActionPerformed
-
-
 
     private void GameInputFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GameInputFieldActionPerformed
         String command = evt.getActionCommand();
@@ -359,16 +339,12 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         game.nextMove(p, this, command);
     }//GEN-LAST:event_GameInputFieldActionPerformed
 
-
-
     private void EastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EastButtonActionPerformed
         ParserOutput p = parser.parse("est", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         GameInputField.setText("");
         DisplayOutputArea.append("\n>> est\n\n");
         game.nextMove(p, this, null);
     }//GEN-LAST:event_EastButtonActionPerformed
-
-
 
     private void LookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LookButtonActionPerformed
         ParserOutput p = parser.parse("osserva", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
@@ -380,9 +356,6 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
             DisplayOutputArea.append("Non possiedi niente per vedere illuminata la stanza, non vedi nemmeno la punta del tuo naso… corri subito a cercare qualcosa! "
                     + "Magari con un po’ di luce puoi rovistare nelle divise delle guardie.\n");
         }
-
-
-
     }//GEN-LAST:event_LookButtonActionPerformed
 
     private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed
@@ -439,14 +412,13 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
     private javax.swing.JButton NorthButton;
     private javax.swing.JButton SaveButton;
     private javax.swing.JButton SouthButton;
-    private javax.swing.JTextArea TimeTextArea;
-    private javax.swing.JScrollPane TimeTextAreaJsp;
     private javax.swing.JButton WestButton;
+    private javax.swing.JTextField jTimeField;
     // End of variables declaration//GEN-END:variables
 
-    
-        @Override
+    @Override
         public void run(){
+        int hour, minute, second;
         while (true){
             Calendar cal = Calendar.getInstance();
             hour = cal.get(Calendar.HOUR_OF_DAY);
@@ -457,10 +429,10 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
             Date dat = cal.getTime();
             String time24 = sdf24.format(dat);
             
-             TimeTextArea.setText(time24);
-            
+             jTimeField.setText(time24);
          }
     } 
+        
     public void DisplayOutputSetText(String s) {
          DisplayOutputArea.append(s);
     }
@@ -473,8 +445,6 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
          exitDialog.setVisible(true);
     }
     
-
-
  /* private void sendCommand() {
         if (GameInputField.getText().length() > 0) {
             String command = GameInputField.getText();
