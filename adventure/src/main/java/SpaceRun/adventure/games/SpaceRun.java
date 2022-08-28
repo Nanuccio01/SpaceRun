@@ -77,7 +77,7 @@ public class SpaceRun extends GameDescription {
         open.setAlias(new String[]{"fruga", "rovista"});
         getCommands().add(open);
         Command use = new Command(CommandType.USE, "usa");
-        use.setAlias(new String[]{"utilizza","premi", "spingi", "pigia", "metti", "inserisci", "uccidi", "spara", "guida", "parti", "attiva", "accendi"});
+        use.setAlias(new String[]{"utilizza", "spegni", "premi", "elimina", "cancella", "spingi", "pigia", "metti", "inserisci", "uccidi", "spara", "guida", "parti", "attiva", "accendi"});
         getCommands().add(use);
         Command mike = new Command(CommandType.MIKE, "mike");
         mike.setAlias(new String[]{"MIKE","Mike"});
@@ -391,10 +391,10 @@ public class SpaceRun extends GameDescription {
                     if (p.getObject().isOpenable() == true && p.getObject().isOpen() == false ) {
                         spaceRunJFrame.DisplayOutputSetText(p.getObject().getName() + " chiuso \n");
                     } else {
-                        spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription());
+                        spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription() + "\n");
                     }
                 } else if (p.getInvObject() != null) {
-                    spaceRunJFrame.DisplayOutputSetText(p.getInvObject().getDescription());
+                    spaceRunJFrame.DisplayOutputSetText(p.getInvObject().getDescription() + "\n");
                 } else if (getCurrentRoom().getLook() != null) {
                     if(getCurrentRoom().isVisible() == true){
                         spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getLook() + "\n" );
@@ -419,7 +419,7 @@ public class SpaceRun extends GameDescription {
                         getInventory().add(p.getObject());
                         getCurrentRoom().getObjects().remove(p.getObject());
                         spaceRunJFrame.DisplayOutputSetText("Hai raccolto: " + p.getObject().getName()+ " ->" + p.getObject().getDescription() + "\n");
-                        spaceRunJFrame.InventoryOutputSetText("  "+ p.getObject().getName() + "\n");
+                        spaceRunJFrame.InventoryOutputSetText(" -"+ p.getObject().getName() + "\n");
                         if(p.getObject().getId() == 11) {
                             spaceRunJFrame.DisplayOutputSetText("Tessera di riconoscimento presa! Sembra essere di un alieno importante, dovresti aver il lasciapassare per tutte le stanze dell’astronave. \n");
                             Iterator<Room> roomIt = getRooms().iterator();
@@ -454,7 +454,7 @@ public class SpaceRun extends GameDescription {
                                     nextRoom.setMikeMessage("Io non parlo, sto tremando. Sono scosso ed ho troppa paura. \n");  
                                 } 
                             }
-                        }
+                        } 
                     } else {
                         spaceRunJFrame.DisplayOutputSetText("Non puoi raccogliere questo oggetto.");
                     }
@@ -494,7 +494,16 @@ public class SpaceRun extends GameDescription {
                             }
                             if (p.getObject().getId() == 10){
                                 spaceRunJFrame.DisplayOutputSetText("Tessera di riconoscimento trovata! Speriamo sia utile a qualcosa. Prendila e continua il tuo percorso. \n");
-                            }    
+                            } else if (p.getObject().getId() == 0){
+                                spaceRunJFrame.DisplayOutputSetText("Hai aperto il tuo zainetto e sembra esserci qualcosa al suo interno. È un vecchio regalo di compleanno, un orologio donato dal tuo ormai lontano padre. "
+                                        + "Decidi di custodirlo con cura. Potrebbe tornarti utile.   \n");
+                            } else if (p.getObject().getId() == 2){
+                                spaceRunJFrame.DisplayOutputSetText("Noti una scatola in cui intravedi oggetti che potrebbero servirti e accanto ci sono scartoffie che però potrebbero rivelarti il motivo per il quale sei lì."
+                                        + " Non hai molto tempo però, sbrigati!  \n");
+                            } else if (p.getObject().getId() == 3){
+                                spaceRunJFrame.DisplayOutputSetText("Vedi una tazza, una foto di famiglia, una penna, una torcia ed una pistola laser."
+                                        + " Sembra quasi che abbiano preso tutti gli oggetti presenti su una scrivania di un carabiniere! Tranne la pistola ovviamente… \n");
+                            }   
                         } else {
                             spaceRunJFrame.DisplayOutputSetText("Non puoi aprire questo oggetto.");
                         }
