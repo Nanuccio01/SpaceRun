@@ -27,11 +27,11 @@ public class AdvObject {
 
     private boolean pickupable = true;
 
-    private boolean pushable = false;
+    private boolean usable = false;
 
     private boolean open = false;
 
-    private boolean push = false;
+    private boolean used = false;
 
     public AdvObject(int id) {
         this.id = id;
@@ -87,12 +87,12 @@ public class AdvObject {
         this.pickupable = pickupable;
     }
 
-    public boolean isPushable() {
-        return pushable;
+    public boolean isUsable() {
+        return usable;
     }
 
-    public void setPushable(boolean pushable) {
-        this.pushable = pushable;
+    public void setUsable(boolean usable) {
+        this.usable = usable;
     }
 
     public boolean isOpen() {
@@ -103,12 +103,12 @@ public class AdvObject {
         this.open = open;
     }
 
-    public boolean isPush() {
-        return push;
+    public boolean isUsed() {
+        return used;
     }
 
-    public void setPush(boolean push) {
-        this.push = push;
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 
     public Set<String> getAlias() {

@@ -10,13 +10,11 @@ import SpaceRun.adventure.parser.Parser;
 import SpaceRun.adventure.parser.ParserOutput;
 import SpaceRun.adventure.GameDescription;
 import SpaceRun.adventure.Utils;
-import SpaceRun.adventure.type.Command;
 import static com.sun.tools.javac.util.StringUtils.toUpperCase;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -54,6 +52,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         } catch (Exception ex) {
             System.err.println(ex);
         }
+        
         Set<String> stopwords = Utils.loadFileListInSet(new File("./resources/stopwords"));
         parser = new Parser(stopwords);
         try{
@@ -298,16 +297,9 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
 
     private void EnterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterButtonActionPerformed
         String command = GameInputField.getText();
-       /* List<Command> commands = game.getCommands();
-        for (int i = 0; i < game.getCommands().size(); i++) {
-            if (commands.get(i).getName().equals(command) || commands.get(i).getAlias().contains(command)) {
-                ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
-                GameInputField.setText("");
-                DisplayOutputArea.append("\n>> " + command + "\n\n");
-                game.nextMove(p, this, command);
-            } else {DisplayOutputArea.append("Sbagliat");
-            }
-        }*/
+        ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
+        DisplayOutputArea.append("\n>> " + command + "\n\n");
+        game.nextMove(p, this, command);
     }//GEN-LAST:event_EnterButtonActionPerformed
 
     private void SouthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SouthButtonActionPerformed
@@ -333,10 +325,14 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
 
     private void GameInputFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GameInputFieldActionPerformed
         String command = evt.getActionCommand();
-        ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
-        GameInputField.setText("");
-        DisplayOutputArea.append("\n>> " + command + "\n\n");
-        game.nextMove(p, this, command);
+        try {
+            ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
+            GameInputField.setText("");
+            DisplayOutputArea.append("\n>> " + command + "\n\n");
+            game.nextMove(p, this, command);
+        } catch (Exception ex) {
+            DisplayOutputArea.append("\n>>Non ho capito cosa devo fare! Prova con un altro comando.\n");
+        }
     }//GEN-LAST:event_GameInputFieldActionPerformed
 
     private void EastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EastButtonActionPerformed
@@ -344,18 +340,14 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         GameInputField.setText("");
         DisplayOutputArea.append("\n>> est\n\n");
         game.nextMove(p, this, null);
+        
     }//GEN-LAST:event_EastButtonActionPerformed
 
     private void LookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LookButtonActionPerformed
         ParserOutput p = parser.parse("osserva", game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
         GameInputField.setText("");
         DisplayOutputArea.append("\n>> osserva\n\n");
-        if(game.getCurrentRoom().isVisible() ==true){
-            game.nextMove(p, this, null);
-        } else {
-            DisplayOutputArea.append("Non possiedi niente per vedere illuminata la stanza, non vedi nemmeno la punta del tuo naso… corri subito a cercare qualcosa! "
-                    + "Magari con un po’ di luce puoi rovistare nelle divise delle guardie.\n");
-        }
+        game.nextMove(p, this, null);   
     }//GEN-LAST:event_LookButtonActionPerformed
 
     private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed

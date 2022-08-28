@@ -6,8 +6,6 @@
 package SpaceRun.adventure.games;
 
 import SpaceRun.adventure.GameDescription;
-import SpaceRun.adventure.gui.ExitJDialog;
-
 import SpaceRun.adventure.gui.SpaceRunJFrame;
 import SpaceRun.adventure.parser.ParserOutput;
 import SpaceRun.adventure.type.AdvObject;
@@ -15,14 +13,11 @@ import SpaceRun.adventure.type.AdvObjectContainer;
 import SpaceRun.adventure.type.Command;
 import SpaceRun.adventure.type.CommandType;
 import SpaceRun.adventure.type.Room;
-
 import static com.sun.tools.javac.util.StringUtils.toUpperCase;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
-
-
 
 /**
  * ATTENZIONE: La descrizione del gioco è fatta in modo che qualsiasi gioco
@@ -38,7 +33,9 @@ import java.util.Iterator;
  *
  * @author pierpaolo
  */
-public class SpaceRun extends GameDescription { //aggiunta abstract per errore
+public class SpaceRun extends GameDescription { 
+
+//aggiunta abstract per errore
     @Override
     public void init() throws Exception {
         
@@ -79,15 +76,9 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
         Command open = new Command(CommandType.OPEN, "apri");
         open.setAlias(new String[]{"fruga", "rovista"});
         getCommands().add(open);
-        Command push = new Command(CommandType.PUSH, "premi");
-        push.setAlias(new String[]{"spingi","pigia"});
-        getCommands().add(push);
         Command use = new Command(CommandType.USE, "usa");
-        use.setAlias(new String[]{"utilizza", "rompi", "metti", "inserisci", "uccidi", "sali", "spara", "guida", "parti"});
+        use.setAlias(new String[]{"utilizza","premi", "spingi", "pigia", "metti", "inserisci", "uccidi", "spara", "guida", "parti", "attiva", "accendi"});
         getCommands().add(use);
-        Command turn_on = new Command(CommandType.TURN_ON, "accendi");
-        turn_on.setAlias(new String[]{"attiva"});
-        getCommands().add(turn_on);
         Command mike = new Command(CommandType.MIKE, "mike");
         mike.setAlias(new String[]{"MIKE","Mike"});
         getCommands().add(mike);
@@ -250,12 +241,14 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             setParam = lineObjects.split("#");
             AdvObject laserGun = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
             laserGun.setAlias(new String[]{"pistola", "pistola laser"});
+            laserGun.setUsable(true);
             box.add(laserGun);  
             
             lineObjects = brObjects.readLine(); //6
             setParam = lineObjects.split("#");
             AdvObject torch = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
             torch.setAlias(new String[]{"torcia", "luce"});
+            torch.setUsable(true);
             box.add(torch);
             
             lineObjects = brObjects.readLine(); //7
@@ -275,7 +268,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             lineObjects = brObjects.readLine(); //9
             setParam = lineObjects.split("#");
             AdvObject pen = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            pen.setAlias(new String[]{"scatola","scatolo"});
+            pen.setAlias(new String[]{"stilo"});
             pen.setPickupable(false);
             box.add(pen);
             
@@ -323,9 +316,9 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             lineObjects = brObjects.readLine(); //16
             setParam = lineObjects.split("#");
             AdvObject redButton = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            redButton.setAlias(new String[]{"piantina","mappa navicella","mappa astronave"});
+            redButton.setAlias(new String[]{});
             redButton.setPickupable(false);
-            redButton.setPushable(true);
+            redButton.setUsable(true);
             spacecraft.getObjects().add(redButton); 
                        
             //Set starting room
@@ -338,6 +331,9 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
 
     @Override
     public void nextMove(ParserOutput p, SpaceRunJFrame spaceRunJFrame, String command) {
+            boolean laserGun = false;
+       
+
         if (p.getCommand() == null) {
             spaceRunJFrame.DisplayOutputSetText("Non ho capito cosa devo fare! Prova con un altro comando.");
         } else {
@@ -345,6 +341,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             boolean noroom = false;
             boolean move = false;
             boolean blocked = false;
+
             if (p.getCommand().getType() == CommandType.NORD) {
                 if (getCurrentRoom().getNorth() != null) {
                     if (getCurrentRoom().getNorth().isLocked() == false) {
@@ -392,35 +389,86 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             } else if (p.getCommand().getType() == CommandType.LOOK_AT) {
                  if (p.getObject() != null) {
                     if (p.getObject().isOpenable() == true && p.getObject().isOpen() == false ) {
-                        spaceRunJFrame.DisplayOutputSetText(p.getObject().getName() + " chiuso");
+                        spaceRunJFrame.DisplayOutputSetText(p.getObject().getName() + " chiuso \n");
                     } else {
                         spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription());
                     }
                 } else if (p.getInvObject() != null) {
                     spaceRunJFrame.DisplayOutputSetText(p.getInvObject().getDescription());
                 } else if (getCurrentRoom().getLook() != null) {
-                    spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getLook());
+                    if(getCurrentRoom().isVisible() == true){
+                        spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getLook() + "\n" );
+                    } else {
+                        spaceRunJFrame.DisplayOutputSetText("Non possiedi niente per vedere illuminata la stanza, non vedi nemmeno la punta del tuo naso… "
+                                + "corri subito a cercare qualcosa! "
+                                + "Magari con un po’ di luce puoi rovistare nelle divise delle guardie.\n");
+                    }     
                 } else {
-                    spaceRunJFrame.DisplayOutputSetText("Non c'è niente di interessante qui.");
+                    spaceRunJFrame.DisplayOutputSetText("Non c'è niente di interessante.");
+                }
+                 
+            } else if (p.getCommand().getType() == CommandType.MIKE) {
+                if (getCurrentRoom().getMikeMessage() != null) {
+                    spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getMikeMessage() + "\n" );
+                } else {
+                    spaceRunJFrame.DisplayOutputSetText("Mike non disponibile");
                 }
             } else if (p.getCommand().getType() == CommandType.PICK_UP) {
                 if (p.getObject() != null) {
                     if (p.getObject().isPickupable()) {
                         getInventory().add(p.getObject());
                         getCurrentRoom().getObjects().remove(p.getObject());
-                        spaceRunJFrame.DisplayOutputSetText("Hai raccolto: " + p.getObject().getName()+ " ->" + p.getObject().getDescription());
+                        spaceRunJFrame.DisplayOutputSetText("Hai raccolto: " + p.getObject().getName()+ " ->" + p.getObject().getDescription() + "\n");
                         spaceRunJFrame.InventoryOutputSetText("  "+ p.getObject().getName() + "\n");
+                        if(p.getObject().getId() == 11) {
+                            spaceRunJFrame.DisplayOutputSetText("Tessera di riconoscimento presa! Sembra essere di un alieno importante, dovresti aver il lasciapassare per tutte le stanze dell’astronave. \n");
+                            Iterator<Room> roomIt = getRooms().iterator();
+                            while (roomIt.hasNext()) {
+                                Room nextRoom = roomIt.next();
+                                if(nextRoom.getId() == 7) {
+                                    Iterator<AdvObject> objIt = nextRoom.getObjects().iterator();
+                                    while (objIt.hasNext()) {
+                                        AdvObject nextObj = objIt.next();
+                                        nextObj.setUsable(true);
+                                    }
+                                }
+                                nextRoom.setLocked(false);
+                            }
+                        } else if  (p.getObject().getId() == 12) {
+                            Iterator<Room> roomIt = getRooms().iterator();
+                            while (roomIt.hasNext()) {
+                                Room nextRoom = roomIt.next();
+                                if(nextRoom.getId() == 1) {
+                                    nextRoom.setMikeMessage("Ti consiglio di visitare verso Ovest, potresti trovare qualcosa di interessante. \n");  
+                                } else if(nextRoom.getId() == 4) {
+                                    nextRoom.setMikeMessage("Procedi verso Nord, stai andando alla grande. Promettimi però che resti con me a giocare dopo. \n");  
+                                } else if(nextRoom.getId() == 5) {
+                                    nextRoom.setMikeMessage("Ti consiglio prima di passare da Ovest ora che possiedi il tesserino! \n");
+                                } else if(nextRoom.getId() == 6) {
+                                    nextRoom.setMikeMessage("Finalmente possiamo parlare insieme. Piacere Mike, sembra non sei molto sveglio come umano, ma sei simpatico. \n");  
+                                } else if(nextRoom.getId() == 7) {
+                                    nextRoom.setMikeMessage("Se non lo hai già fatto elimina tutto, spegni le telecamere e dai un’occhiata alla mappa per finire."
+                                            + " Non te ne dimenticare, così saprai come scappare. Da questo momento in poi l’astronave sembra essere più cupa ed ostile del previsto."
+                                            + " In alcune stanze non ho il permesso di entrare nemmeno io. Non posso dirti altro. Tieniti pronto. \n");   
+                                } else if(nextRoom.getId() == 10) {
+                                    nextRoom.setMikeMessage("Io non parlo, sto tremando. Sono scosso ed ho troppa paura. \n");  
+                                } 
+                            }
+                        }
                     } else {
                         spaceRunJFrame.DisplayOutputSetText("Non puoi raccogliere questo oggetto.");
                     }
                 } else {
-                    spaceRunJFrame.DisplayOutputSetText("Non c'è niente da raccogliere qui.");
+                    spaceRunJFrame.DisplayOutputSetText("Non c'è niente da raccogliere.");
                 }
+
+                if(p.getObject().getId() == 5) {
+                    laserGun = true;
+                } 
+
             } else if (p.getCommand().getType() == CommandType.OPEN) {
                 /*ATTENZIONE: quando un oggetto contenitore viene aperto, tutti gli oggetti contenuti
-                * vengongo inseriti nella stanza o nell'inventario a seconda di dove si trova l'oggetto contenitore.
-                * Potrebbe non essere la soluzione ottimale.
-                 */
+                * vengongo inseriti nella stanza o nell'inventario a seconda di dove si trova l'oggetto contenitore.*/
                 if (p.getObject() == null && p.getInvObject() == null) {
                     spaceRunJFrame.DisplayOutputSetText("Non c'è niente da aprire qui.");
                 } else {
@@ -430,20 +478,23 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                                 spaceRunJFrame.DisplayOutputSetText("Hai aperto: " + p.getObject().getName());
                                 AdvObjectContainer c = (AdvObjectContainer) p.getObject();
                                 if (!c.getList().isEmpty()) {
-                                    spaceRunJFrame.DisplayOutputSetText("\n" + c.getName() + " contiene:");
+                                    spaceRunJFrame.DisplayOutputSetText("\n" + c.getName() + " contiene: | ");
                                     Iterator<AdvObject> it = c.getList().iterator();
                                     while (it.hasNext()) {
                                         AdvObject next = it.next();
                                         getCurrentRoom().getObjects().add(next);
-                                        spaceRunJFrame.DisplayOutputSetText(" " + next.getName());
+                                        spaceRunJFrame.DisplayOutputSetText(next.getName() + " | " );
                                         it.remove();
                                     }
-                                    spaceRunJFrame.DisplayOutputSetText("");
+                                    spaceRunJFrame.DisplayOutputSetText("\n");
                                 }
                             } else {
                                 spaceRunJFrame.DisplayOutputSetText("Hai aperto: " + p.getObject().getName());
                                 p.getObject().setOpen(true);
                             }
+                            if (p.getObject().getId() == 10){
+                                spaceRunJFrame.DisplayOutputSetText("Tessera di riconoscimento trovata! Speriamo sia utile a qualcosa. Prendila e continua il tuo percorso. \n");
+                            }    
                         } else {
                             spaceRunJFrame.DisplayOutputSetText("Non puoi aprire questo oggetto.");
                         }
@@ -454,7 +505,7 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                                 spaceRunJFrame.DisplayOutputSetText("Hai aperto nell' inventario: " + p.getInvObject().getName());
                                 AdvObjectContainer c = (AdvObjectContainer) p.getInvObject();
                                 if (!c.getList().isEmpty()) {
-                                    spaceRunJFrame.DisplayOutputSetText("\n" + c.getName() + " contiene:");
+                                    spaceRunJFrame.DisplayOutputSetText("\n" + c.getName() + " contiene: | ");
                                     Iterator<AdvObject> it = c.getList().iterator();
                                     while (it.hasNext()) {
                                         AdvObject next = it.next();
@@ -462,10 +513,10 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                                         if (next.isPickupable()) {
                                             spaceRunJFrame.InventoryOutputSetText("  "+ next.getName() + "\n");
                                         }
-                                        spaceRunJFrame.DisplayOutputSetText(" " + next.getName());
+                                        spaceRunJFrame.DisplayOutputSetText(next.getName() + " | " );
                                         it.remove();
                                     }
-                                    spaceRunJFrame.DisplayOutputSetText("");
+                                    spaceRunJFrame.DisplayOutputSetText("\n");
                                 }
                             } else {
                                 p.getInvObject().setOpen(true);
@@ -475,23 +526,45 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                         }
                     }
                 }
-            } else if (p.getCommand().getType() == CommandType.PUSH) {
-                //ricerca oggetti pushabili
-                if (p.getObject() != null && p.getObject().isPushable()) {
-                    spaceRunJFrame.DisplayOutputSetText("Hai premuto: " + p.getObject().getName());
-                    if (p.getObject().getId() == 3) {
-                        String message = end();
-                        spaceRunJFrame.DisplayOutputSetText("\nAddio!");
+            } else if (p.getCommand().getType() == CommandType.USE) {
+                //ricerca oggetti usabili
+                if (p.getObject() != null && p.getObject().isUsable()) {
+                    if(p.getObject().isUsed() == false){
+                        spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getObject().getName() + "\n");
+                        p.getObject().setUsed(true);
+                        if(p.getObject().getId() == 6) {
+                            spaceRunJFrame.DisplayOutputSetText("Adesso puoi vedere le stanze, attento però, potresti illuminare la faccia di qualche guardia e svegliarla! \n");
+                            Iterator<Room> roomIt = getRooms().iterator();
+                            while (roomIt.hasNext()) {
+                                Room nextRoom = roomIt.next();
+                                nextRoom.setVisible(true);
+                            }
+                        } 
+                    } else {
+                        spaceRunJFrame.DisplayOutputSetText("Oggetto già in uso.");
                     }
-                } else if (p.getInvObject() != null && p.getInvObject().isPushable()) {
-                    spaceRunJFrame.DisplayOutputSetText("Hai premuto: " + p.getInvObject().getName());
-                    if (p.getInvObject().getId() == 3) {
-                        String message = end();
-                        spaceRunJFrame.DisplayOutputSetText("\nAddio!");
-                    }
+                } else if (p.getInvObject() != null && p.getInvObject().isUsable()) {
+                    if(p.getInvObject().isUsed() == false){
+                        spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getInvObject().getName() + "\n");
+                        p.getInvObject().setUsed(true);
+                        if(p.getInvObject().getId() == 6) {
+                            spaceRunJFrame.DisplayOutputSetText("Adesso puoi vedere le stanze, attento però, potresti illuminare la faccia di qualche guardia e svegliarla! \n");
+                            Iterator<Room> roomIt = getRooms().iterator();
+                            while (roomIt.hasNext()) {
+                                Room nextRoom = roomIt.next();
+                                nextRoom.setVisible(true);
+                            }
+                        } 
+                    } else {
+                        spaceRunJFrame.DisplayOutputSetText("Oggetto già in uso.");
+                    } 
                 } else {
-                    spaceRunJFrame.DisplayOutputSetText("Non ci sono oggetti che puoi premere qui.");
+                    spaceRunJFrame.DisplayOutputSetText("Non puoi usare questo oggetto. ");
+                }    
+                if ((p.getObject().getId() == 13 || p.getObject().getId() == 14 || p.getObject().getId() == 15) && p.getObject().isUsable() == false){
+                    spaceRunJFrame.DisplayOutputSetText("Non hai i requisiti necessari per fare ciò. Se insisti si attiverà l’allarme di sicurezza. ");
                 }
+                
             }  else if (p.getCommand().getType() == CommandType.END) {
                 String message = differentEnd(command);
                 spaceRunJFrame.DisplayOutputSetText(message);
@@ -508,6 +581,8 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                     spaceRunJFrame.DisplayOutputSetText("Porta Magazzino ormai sigillata.\n ");
                  } else if (p.getCommand().getType() == CommandType.WEST && getCurrentRoom().getWest() == null && getCurrentRoom().getId() == 2) {
                     spaceRunJFrame.DisplayOutputSetText("Sei pazzo? Gli alieni ora non osserveranno più i pianeti ma te, diventeresti un morto che cammina. \n");
+                 } else if (p.getCommand().getType() == CommandType.WEST && getCurrentRoom().getWest() == null && getCurrentRoom().getId() == 11) {
+                    spaceRunJFrame.DisplayOutputSetText("Porta ormai fuori uso con un piccolo spiraglio, forse ti ricorda qualcosa.  \n");
                  } else {
                      spaceRunJFrame.DisplayOutputSetText("Anche se siamo sullo spazio, è ancora impossibile attraversare i muri...\n");
                  }
@@ -527,9 +602,10 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
                     spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getDescription() + "\n");
                     getCurrentRoom().setVisited(true);
             }
-        } if (getCurrentRoom().isVisited() == true && getCurrentRoom().getId() == 1){
+        } 
+        if (getCurrentRoom().isVisited() == true && getCurrentRoom().getId() == 1){
             getCurrentRoom().setDescription("Sei nel luungo principale corridoio desolato dell’astronave... Senti dei rumori da ovest, sembrano suoni terribili, non sai da dove vuoi procedere...");
-        }
+        } 
     }
 
     private String end() {
@@ -559,3 +635,5 @@ public class SpaceRun extends GameDescription { //aggiunta abstract per errore
             return message;
         }
 }
+
+

@@ -10,5 +10,5 @@ package SpaceRun.adventure.type;
  * @author pierpaolo
  */
 public enum CommandType {
-    END, NORD, SOUTH, EAST, WEST, OPEN, CLOSE, PUSH, PULL, WALK_TO, PICK_UP, TALK_TO, GIVE, USE, LOOK_AT, TURN_ON, TURN_OFF, MIKE, SAVE, LOAD
+    END, NORD, SOUTH, EAST, WEST, OPEN, CLOSE, PICK_UP, USE, LOOK_AT, MIKE, SAVE, LOAD
 }
