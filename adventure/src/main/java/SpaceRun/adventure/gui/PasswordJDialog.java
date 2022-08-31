@@ -16,6 +16,7 @@ public class PasswordJDialog extends javax.swing.JDialog {
     public PasswordJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        PasswordField.setText("");
     }
 
     /**
@@ -38,8 +39,8 @@ public class PasswordJDialog extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jButton20 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
+        jButtonEnter = new javax.swing.JButton();
+        jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -113,7 +114,6 @@ public class PasswordJDialog extends javax.swing.JDialog {
         jButton6.setFont(new java.awt.Font("OCR A Extended", 1, 12)); // NOI18N
         jButton6.setForeground(new java.awt.Color(51, 255, 0));
         jButton6.setText("6");
-        jButton6.setActionCommand("6");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
@@ -150,23 +150,23 @@ public class PasswordJDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton20.setBackground(new java.awt.Color(0, 0, 0));
-        jButton20.setFont(new java.awt.Font("OCR A Extended", 1, 12)); // NOI18N
-        jButton20.setForeground(new java.awt.Color(51, 255, 0));
-        jButton20.setText("INVIO");
-        jButton20.addActionListener(new java.awt.event.ActionListener() {
+        jButtonEnter.setBackground(new java.awt.Color(0, 0, 0));
+        jButtonEnter.setFont(new java.awt.Font("OCR A Extended", 1, 12)); // NOI18N
+        jButtonEnter.setForeground(new java.awt.Color(51, 255, 0));
+        jButtonEnter.setText("INVIO");
+        jButtonEnter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton20ActionPerformed(evt);
+                jButtonEnterActionPerformed(evt);
             }
         });
 
-        jButton10.setBackground(new java.awt.Color(0, 0, 0));
-        jButton10.setFont(new java.awt.Font("OCR A Extended", 1, 12)); // NOI18N
-        jButton10.setForeground(new java.awt.Color(51, 255, 0));
-        jButton10.setText("CANCELLA");
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCancel.setBackground(new java.awt.Color(0, 0, 0));
+        jButtonCancel.setFont(new java.awt.Font("OCR A Extended", 1, 12)); // NOI18N
+        jButtonCancel.setForeground(new java.awt.Color(51, 255, 0));
+        jButtonCancel.setText("CANCELLA");
+        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                jButtonCancelActionPerformed(evt);
             }
         });
 
@@ -199,10 +199,10 @@ public class PasswordJDialog extends javax.swing.JDialog {
                                 .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jButton20, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jButtonEnter, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -228,9 +228,9 @@ public class PasswordJDialog extends javax.swing.JDialog {
                     .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton10)
+                    .addComponent(jButtonCancel)
                     .addComponent(jButton0)
-                    .addComponent(jButton20))
+                    .addComponent(jButtonEnter))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -292,9 +292,9 @@ public class PasswordJDialog extends javax.swing.JDialog {
         PasswordField.setText(psw);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton20ActionPerformed
-        String psw = PasswordField.getText();
-    }//GEN-LAST:event_jButton20ActionPerformed
+    private void jButtonEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEnterActionPerformed
+        dispose();
+    }//GEN-LAST:event_jButtonEnterActionPerformed
 
     private void jButton0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton0ActionPerformed
         String psw = PasswordField.getText();
@@ -302,9 +302,11 @@ public class PasswordJDialog extends javax.swing.JDialog {
         PasswordField.setText(psw);
     }//GEN-LAST:event_jButton0ActionPerformed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton10ActionPerformed
+    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
+        String psw = PasswordField.getText();
+	psw = psw.substring(0, psw.length()-1);
+	PasswordField.setText(psw);
+    }//GEN-LAST:event_jButtonCancelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -352,9 +354,7 @@ public class PasswordJDialog extends javax.swing.JDialog {
     private javax.swing.JTextField PasswordField;
     private javax.swing.JButton jButton0;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton20;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -362,6 +362,8 @@ public class PasswordJDialog extends javax.swing.JDialog {
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonEnter;
     // End of variables declaration//GEN-END:variables
 
 

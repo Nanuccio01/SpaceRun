@@ -560,7 +560,16 @@ public class SpaceRun extends GameDescription {
                                     + "Se sei arrivato in questo punto, sicuramente la possiedi già. "
                                     + "Magari potrebbe servire per identificare chi è al comando della navicella... \n");
                             }
-                            spaceRunJFrame.PasswordDialog(); 
+                            String psw = spaceRunJFrame.PasswordDialog(); 
+                            if(psw != "10403"){
+                                 spaceRunJFrame.DisplayOutputSetText("Codice identificativo non riconosciuto, riprovare! \n");
+                            } else {
+                                spaceRunJFrame.DisplayOutputSetText(psw + " -> Identificazione riuscita, navicella pronta in decollo! \n");
+                                String message = end();
+                                spaceRunJFrame.DisplayOutputSetText(message);
+                                spaceRunJFrame.ExitDialog();
+                            }
+                             
                         }
                     } else {
                         spaceRunJFrame.DisplayOutputSetText("Oggetto già in uso.");

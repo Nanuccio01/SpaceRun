@@ -438,11 +438,14 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
     }
     
     public void ExitDialog() {
-         exitDialog.setVisible(true);
+        exitDialog.setVisible(true);
     }
     
-    public void PasswordDialog() {
-         passwordDialog.setVisible(true);
+    public String PasswordDialog() {
+        passwordDialog.setVisible(true);
+        String psw = passwordDialog.PswDialog();
+        return psw;
+         
     }
     
  /* private void sendCommand() {
