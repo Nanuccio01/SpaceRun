@@ -16,7 +16,6 @@ public class PasswordJDialog extends javax.swing.JDialog {
     public PasswordJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        PasswordField.setText("");
     }
 
     /**
@@ -370,6 +369,10 @@ public class PasswordJDialog extends javax.swing.JDialog {
     public String Concat(String num, String add) {
         num = num + add;
         return num;
+    }
+    
+    public void Clear() {
+        PasswordField.setText("");
     }
     
     public String PswDialog() {

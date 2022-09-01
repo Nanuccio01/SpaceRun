@@ -78,7 +78,7 @@ public class SpaceRun extends GameDescription {
         open.setAlias(new String[]{"fruga", "rovista"});
         getCommands().add(open);
         Command use = new Command(CommandType.USE, "usa");
-        use.setAlias(new String[]{"utilizza", "spingi", "premi", "pigia", "metti", "inserisci", "uccidi", "spara", "sparalo", "guida", "parti", "attiva", "accendi"});
+        use.setAlias(new String[]{"utilizza", "spingi", "premi", "pigia", "metti", "inserisci", "ammazza", "uccidi", "spara", "sparalo", "guida", "parti", "attiva", "accendi"});
         getCommands().add(use);
         Command mike = new Command(CommandType.MIKE, "mike");
         mike.setAlias(new String[]{"MIKE","Mike"});
@@ -278,7 +278,7 @@ public class SpaceRun extends GameDescription {
             lineObjects = brObjects.readLine(); //10
             setParam = lineObjects.split("#");
             AdvObjectContainer uniforms = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            uniforms.setAlias(new String[]{"vestiti","panni", "mucchio di robe", "robe"});
+            uniforms.setAlias(new String[]{"vestiti", "panni", "mucchio di robe", "robe"});
             uniforms.setOpenable(true);
             uniforms.setPickupable(false);
             dormitory.getObjects().add(uniforms);
@@ -323,6 +323,15 @@ public class SpaceRun extends GameDescription {
             redButton.setPickupable(false);
             redButton.setUsable(true);
             spacecraft.getObjects().add(redButton); 
+            
+            lineObjects = brObjects.readLine(); //17
+            setParam = lineObjects.split("#");
+            AdvObject alien = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            alien.setAlias(new String[]{"guardia", "guardia aliena", "alieni", "alieno", "extraterrestre"});
+            alien.setPickupable(false);
+            alien.setUsable(true);
+            controlCabin.getObjects().add(alien); 
+           
                        
             //Set starting room
             setCurrentRoom(incubators);
@@ -561,19 +570,19 @@ public class SpaceRun extends GameDescription {
                                     + "Magari potrebbe servire per identificare chi è al comando della navicella... \n");
                             }
                             String psw = spaceRunJFrame.PasswordDialog(); 
-                            if(psw != "10403"){
-                                 spaceRunJFrame.DisplayOutputSetText("Codice identificativo non riconosciuto, riprovare! \n");
-                            } else {
+                            if("10403".equals(psw)){
                                 spaceRunJFrame.DisplayOutputSetText(psw + " -> Identificazione riuscita, navicella pronta in decollo! \n");
                                 String message = end();
                                 spaceRunJFrame.DisplayOutputSetText(message);
                                 spaceRunJFrame.ExitDialog();
+                            } else {
+                               spaceRunJFrame.DisplayOutputSetText("Codice identificativo non riconosciuto, riprovare! \n");
                             }
-                             
                         }
                     } else {
                         spaceRunJFrame.DisplayOutputSetText("Oggetto già in uso.");
                     }
+                    
                 } else if (p.getInvObject() != null && p.getInvObject().isUsable()) {
                     if(p.getInvObject().isUsed() == false){
                         spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getInvObject().getName() + "\n");
@@ -591,14 +600,13 @@ public class SpaceRun extends GameDescription {
                                 getCurrentRoom().getEast().setLocked(false);
                                 spaceRunJFrame.DisplayOutputSetText("Dalla paura spari. "
                                         + "Il primo colpo gli annienta solo un piede. L’alieno si rialza e si fionda con un salto verso di te in volo. "
-                                        + "Tu chiudi gli occhi pensando sei spacciato e BAANGG!!! Senza manco accorgetene pianti un colpo laser dritto nelle cervella di questo essere."
+                                        + "Tu chiudi gli occhi pensando sei spacciato e BAANGG!!! \nSenza manco accorgetene pianti un colpo laser dritto nelle cervella di questo essere."
                                         + " L’autostima ti sale leggermente, ti senti un eroe per ora. Un eroe cosparso di sangue violaceo… Meglio continuare.  \n");
                             } else if (getCurrentRoom().getId() == 2){
                                 spaceRunJFrame.DisplayOutputSetText("Gli alieni sono troppi, come ti è saltato in mente di imitare Rambo. Muori in una sparatoria epica.  \n");
                                 spaceRunJFrame.DisplayOutputSetText("\nAddio!");
                                 spaceRunJFrame.ExitDialog(); 
-                            }
-                            
+                            }     
                         }
                     } else {
                         spaceRunJFrame.DisplayOutputSetText("Oggetto già in uso.");
@@ -662,7 +670,7 @@ public class SpaceRun extends GameDescription {
                 + " Una grande flotta di navicelle armate aliene si innalza cercando di colpirti con i loro cannoni,"
                 + " ma involontariamente hai già messo il pilota automatico verso la terra e sparisci in un tunnel supersonico dinanzi ai loro occhi. "
                 + "Ripensi a Mike, sai che ti ha aiutato abbastanza, ma non c’era spazio per lui. "
-                + "Non sai nemmeno se fosse la scelta giusta da fare, ma solo una cosa è certa… Ci si vede alieni! A mai più!");
+                + "Non sai nemmeno se fosse la scelta giusta da fare, ma solo una cosa è certa… Ci si vede alieni! A mai più! \n");
     return message;
     }
     
@@ -686,3 +694,17 @@ public class SpaceRun extends GameDescription {
 }
 
 
+                       /* if (p.getObject().getId() == 17) {
+                            p.getObject().setUsed(false);
+                            if (getCurrentRoom().getId() == 10){
+                                getCurrentRoom().getEast().setLocked(false);
+                                spaceRunJFrame.DisplayOutputSetText("Dalla paura spari. "
+                                        + "Il primo colpo gli annienta solo un piede. L’alieno si rialza e si fionda con un salto verso di te in volo. "
+                                        + "Tu chiudi gli occhi pensando sei spacciato e BAANGG!!! \nSenza manco accorgetene pianti un colpo laser dritto nelle cervella di questo essere."
+                                        + " L’autostima ti sale leggermente, ti senti un eroe per ora. Un eroe cosparso di sangue violaceo… Meglio continuare.  \n");
+                            } else if (getCurrentRoom().getId() == 2){
+                                spaceRunJFrame.DisplayOutputSetText("Gli alieni sono troppi, come ti è saltato in mente di imitare Rambo. Muori in una sparatoria epica.  \n");
+                                spaceRunJFrame.DisplayOutputSetText("\nAddio!");
+                                spaceRunJFrame.ExitDialog(); 
+                            }     
+                        } else{*/
