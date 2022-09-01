@@ -330,8 +330,8 @@ public class SpaceRun extends GameDescription {
             alien.setAlias(new String[]{"guardia", "guardia aliena", "alieni", "alieno", "extraterrestre"});
             alien.setPickupable(false);
             alien.setUsable(true);
-            controlCabin.getObjects().add(alien); 
-           
+            controlRoom.getObjects().add(alien); 
+            observatory.getObjects().add(alien); 
                        
             //Set starting room
             setCurrentRoom(incubators);
@@ -560,23 +560,45 @@ public class SpaceRun extends GameDescription {
                 //ricerca oggetti usabili
                 if (p.getObject() != null && p.getObject().isUsable()) {
                     if(p.getObject().isUsed() == false){
-                        spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getObject().getName() + "\n");
+                        if (p.getObject().getId() != 17){
+                        spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getObject().getName() + "\n"); }
                         p.getObject().setUsed(true);
                         if(p.getObject().getId() == 16) {
                             p.getObject().setUsed(false);
-                            if(getCurrentRoom().isVisited() == false) {
-                                spaceRunJFrame.DisplayOutputSetText("Troppo bello per essere vero, serve una password numerica da inserire. "
-                                    + "Se sei arrivato in questo punto, sicuramente la possiedi già. "
-                                    + "Magari potrebbe servire per identificare chi è al comando della navicella... \n");
-                            }
+                            spaceRunJFrame.DisplayOutputSetText("Troppo bello per essere vero, serve una password numerica da inserire. "
+                                + "Se sei arrivato in questo punto, sicuramente la possiedi già. "
+                                + "Magari potrebbe servire per identificare chi è al comando della navicella... \n");
                             String psw = spaceRunJFrame.PasswordDialog(); 
                             if("10403".equals(psw)){
-                                spaceRunJFrame.DisplayOutputSetText(psw + " -> Identificazione riuscita, navicella pronta in decollo! \n");
+                                spaceRunJFrame.DisplayOutputSetText(psw + " -> Identificazione riuscita, navicella pronta in decollo! \n\n");
                                 String message = end();
                                 spaceRunJFrame.DisplayOutputSetText(message);
                                 spaceRunJFrame.ExitDialog();
                             } else {
                                spaceRunJFrame.DisplayOutputSetText("Codice identificativo non riconosciuto, riprovare! \n");
+                            }
+                        } else if (p.getObject().getId() == 17) {
+                            boolean gun = false;
+                            Iterator<AdvObject> invIt = getInventory().iterator();
+                            while (invIt.hasNext()) {
+                                AdvObject next = invIt.next();
+                                if (next.getId() == 5){
+                                    gun = true;
+                                }
+                            }
+                            p.getObject().setUsed(false);
+                            if (getCurrentRoom().getId() == 10 && gun == true){
+                                getCurrentRoom().getEast().setLocked(false);
+                                spaceRunJFrame.DisplayOutputSetText("Dalla paura spari. "
+                                        + "Il primo colpo gli annienta solo un piede. L’alieno si rialza e si fionda con un salto verso di te in volo. "
+                                        + "Tu chiudi gli occhi pensando sei spacciato e BAANGG!!! \nSenza manco accorgetene pianti un colpo laser dritto nelle cervella di questo essere."
+                                        + " L’autostima ti sale leggermente, ti senti un eroe per ora. Un eroe cosparso di sangue violaceo… Meglio continuare.  \n");
+                            } else if (getCurrentRoom().getId() == 2 && gun == true){
+                                spaceRunJFrame.DisplayOutputSetText("Gli alieni sono troppi, come ti è saltato in mente di imitare Rambo. Muori in una sparatoria epica.  \n");
+                                spaceRunJFrame.DisplayOutputSetText("\nAddio!");
+                                spaceRunJFrame.ExitDialog(); 
+                            } else {
+                                spaceRunJFrame.DisplayOutputSetText("Non possiedi niente per uccidere l'alieno.  \n");
                             }
                         }
                     } else {
@@ -660,9 +682,10 @@ public class SpaceRun extends GameDescription {
             }
         } 
         if (getCurrentRoom().isVisited() == true && getCurrentRoom().getId() == 1){
-            getCurrentRoom().setDescription("Sei nel luungo principale corridoio desolato dell’astronave... Senti dei rumori da ovest, sembrano suoni terribili, non sai da dove vuoi procedere...");
+            getCurrentRoom().setDescription("Sei nel luungo principale corridoio desolato dell’astronave... Senti dei rumori da est, sembrano suoni terribili, non sai da dove vuoi procedere...");
         } 
     }
+
 
     private String end() {
         String message = ("Finalmente la navicella si alza in aria, inizi a guidarla sbattendo da destra a sinistra lungo le pareti del porto spaziale."
