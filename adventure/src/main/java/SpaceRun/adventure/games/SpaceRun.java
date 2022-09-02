@@ -21,25 +21,31 @@ import java.util.Calendar;
 import java.util.Iterator;
 
 /**
- * ATTENZIONE: La descrizione del gioco è fatta in modo che qualsiasi gioco
+ * La descrizione del gioco è fatta in modo che qualsiasi gioco
  * debba estendere la classe GameDescription. L'Engine è fatto in modo che possa
  * eseguire qualsiasi gioco che estende GameDescription, in questo modo si
  * possono creare più gioci utilizzando lo stesso Engine.
- *
- * Diverse migliorie possono essere applicate: - la descrizione del gioco
- * potrebbe essere caricate da file o da DBMS in modo da non modificare il
- * codice sorgente - l'utilizzo di file e DBMS non è semplice poiché all'interno
- * del file o del DBMS dovrebbe anche essere codificata la logica del gioco
- * (nextMove) oltre alla descrizione di stanze, oggetti, ecc...
- *
- * @author pierpaolo
+ */
+ 
+/**
+ * @author Gaetano Schiralli, Dafne Spaccavento
+ */
+
+/**
+ * La classe SpaceRun, eredita dalla classe GameDescription.java,
+ * implementa tutti i metodi e gl attrbuti, così da creare il gioco in questione, SpaceRun.
  */
 public class SpaceRun extends GameDescription { 
 
-//aggiunta abstract per errore
+    /**
+    * Il metodo init() si occupa del caricamento tramite file di informazioni neecessarie
+    * al popolamento delle liste relative ai comandi, alle stanze e agli oggetti, iniziando così
+    * la partita con l'assegnazione della stanza iniziale della mappa creata.
+    */
     @Override
     public void init() throws Exception {
         
+        // Variabili
         String lineRoom;
         String lineObjects;
         String[] setParam;
@@ -52,7 +58,7 @@ public class SpaceRun extends GameDescription {
         BufferedReader brObjects;
         brObjects = new BufferedReader(frObjects);
 
-        //Commands
+        //Comandi
         Command nord = new Command(CommandType.NORD, "nord");
         nord.setAlias(new String[]{"n", "N", "Nord", "NORD"});
         getCommands().add(nord);
@@ -69,7 +75,7 @@ public class SpaceRun extends GameDescription {
         end.setAlias(new String[]{"end", "fine", "esci", "muori", "ammazzati", "ucciditi", "suicidati", "exit"});
         getCommands().add(end);
         Command look = new Command(CommandType.LOOK_AT, "osserva");
-        look.setAlias(new String[]{"guarda", "vedi", "trova", "cerca", "descrivi", "ispeziona", "esamina", "leggi", "osserva", "ascolta", "spegni", "elimina", "cancella",});
+        look.setAlias(new String[]{"guarda", "vedi", "trova", "cerca", "descrivi", "ispeziona", "esamina", "leggi", "osserva", "ascolta"});
         getCommands().add(look);
         Command pickup = new Command(CommandType.PICK_UP, "raccogli");
         pickup.setAlias(new String[]{"prendi", "ruba"});
@@ -78,7 +84,7 @@ public class SpaceRun extends GameDescription {
         open.setAlias(new String[]{"fruga", "rovista"});
         getCommands().add(open);
         Command use = new Command(CommandType.USE, "usa");
-        use.setAlias(new String[]{"utilizza", "spingi", "premi", "pigia", "metti", "inserisci", "ammazza", "uccidi", "spara", "sparalo", "guida", "parti", "attiva", "accendi"});
+        use.setAlias(new String[]{"utilizza", "spingi", "premi", "pigia", "metti", "inserisci", "ammazza", "uccidi", "spara", "sparalo", "guida", "parti", "attiva", "spegni", "elimina", "cancella", "accendi"});
         getCommands().add(use);
         Command mike = new Command(CommandType.MIKE, "mike");
         mike.setAlias(new String[]{"MIKE","Mike"});
@@ -90,7 +96,7 @@ public class SpaceRun extends GameDescription {
         mike.setAlias(new String[]{"riprendi"});
         getCommands().add(load);
         
-        //Rooms
+        //Stanze
         try{
             lineRoom = brRoom.readLine();
             setParam = lineRoom.split("#");
@@ -162,7 +168,7 @@ public class SpaceRun extends GameDescription {
             spacecraft.setMikeMessage(setParam[3]);
             spacecraft.setLook(setParam[4]);
             
-            //Maps
+            //Creazione mappa
             incubators.setNorth(scientificCorridor);
             scientificCorridor.setWest(westCorridor);
             scientificCorridor.setEast(observatory);
@@ -202,7 +208,7 @@ public class SpaceRun extends GameDescription {
             getRooms().add(universalPort);
             getRooms().add(spacecraft);
             
-            //Obejcts
+            //Oggetti
             lineObjects = brObjects.readLine(); //0
             setParam = lineObjects.split("#");
             AdvObjectContainer backpack = new AdvObjectContainer(Integer.parseInt(setParam[0]), setParam[1], setParam[2]); 
@@ -333,14 +339,21 @@ public class SpaceRun extends GameDescription {
             controlRoom.getObjects().add(alien); 
             observatory.getObjects().add(alien); 
                        
-            //Set starting room
+            //Impostazione stanza iniziale
             setCurrentRoom(incubators);
             incubators.setVisited(true);
         } catch (IOException e) {
             System.exit(0);
         }
-}
-
+}  
+    /**
+     * Il metodo nextMove(), gestisce la mossa effettuata dal giocatore.
+     *
+     * @param p è l'istanza di ParserOutput.java che utilizziamo per la
+     * comprensione del comando inserito
+     * @param spaceRunJFrame è l' istanza di SpaceRunJFrame.java la quale viene consultata e modificata
+     * @param command è la stringa comando così come è stato inserito dall'utente.
+     */
     @Override
     public void nextMove(ParserOutput p, SpaceRunJFrame spaceRunJFrame, String command) {
         if (p.getCommand() == null) {
@@ -355,10 +368,11 @@ public class SpaceRun extends GameDescription {
                 if (getCurrentRoom().getNorth() != null) {
                     if (getCurrentRoom().getNorth().isLocked() == false) {
                         if (getCurrentRoom().getId() == 0){
-                            Calendar cal = Calendar.getInstance();
-                            int time = cal.get(Calendar.MINUTE);
+                            Calendar calMin = Calendar.getInstance();
+                            int time = calMin.get(Calendar.MINUTE);
                             if ((time%2) != 0){
-                                spaceRunJFrame.DisplayOutputSetText("Non riesci ad oltrepassare nemmeno la prima stanza... forse non c’era molto da studiare nel tuo cervello. \n");
+                                spaceRunJFrame.DisplayOutputSetText("Guarda bene l'orario... Non riesci ad oltrepassare nemmeno la prima stanza... "
+                                        + "forse non c’era molto da studiare nel tuo cervello. \n");
                             } else {
                                  setCurrentRoom(getCurrentRoom().getNorth());
                                  move = true;
@@ -409,9 +423,22 @@ public class SpaceRun extends GameDescription {
             } else if (p.getCommand().getType() == CommandType.LOOK_AT) {
                  if (p.getObject() != null) {
                     if (p.getObject().isOpenable() == true && p.getObject().isOpen() == false ) {
-                        spaceRunJFrame.DisplayOutputSetText(" L'oggetto è chiuso \n");
+                        spaceRunJFrame.DisplayOutputSetText(" L'oggetto è chiuso, aprilo per darci un occhiata da vicino \n");
                     } else {
-                        spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription() + "\n");
+                        if (p.getObject().getId() == 15){
+                            Iterator<AdvObject> invIt = getInventory().iterator();
+                            while (invIt.hasNext()) {
+                                AdvObject next = invIt.next();
+                                if (next.getId() == 11){
+                                    spaceRunJFrame.MapDialog();
+                                    spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription() + "\n");
+                                }
+                            }
+                        } else if ((p.getObject().getId() == 13 || p.getObject().getId() == 14 || p.getObject().getId() == 15) && p.getObject().isUsable() == false){
+                        spaceRunJFrame.DisplayOutputSetText("Non hai i requisiti necessari per fare ciò. Se insisti si attiverà l’allarme di sicurezza. \n");
+                        } else {
+                            spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription() + "\n");
+                        }
                     }
                 } else if (p.getInvObject() != null) {
                     spaceRunJFrame.DisplayOutputSetText(p.getInvObject().getDescription() + "\n");
@@ -424,14 +451,13 @@ public class SpaceRun extends GameDescription {
                                 + "Magari con un po’ di luce puoi rovistare nelle divise delle guardie.\n");
                     }     
                 } else {
-                    spaceRunJFrame.DisplayOutputSetText("Non c'è niente di interessante.");
-                }
-                 
+                    spaceRunJFrame.DisplayOutputSetText("Non c'è niente di interessante. \n");
+                } 
             } else if (p.getCommand().getType() == CommandType.MIKE) {
                 if (getCurrentRoom().getMikeMessage() != null) {
                     spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getMikeMessage() + "\n" );
                 } else {
-                    spaceRunJFrame.DisplayOutputSetText("Mike non disponibile");
+                    spaceRunJFrame.DisplayOutputSetText("Mike non disponibile \n");
                 }
             } else if (p.getCommand().getType() == CommandType.PICK_UP) {
                 if (p.getObject() != null) {
@@ -479,14 +505,12 @@ public class SpaceRun extends GameDescription {
                             }
                         } 
                     } else {
-                        spaceRunJFrame.DisplayOutputSetText("Non puoi raccogliere questo oggetto.");
+                        spaceRunJFrame.DisplayOutputSetText("Non puoi raccogliere questo oggetto. \n");
                     }
                 } else {
                     spaceRunJFrame.DisplayOutputSetText("Non c'è niente da raccogliere.");
                 }
             } else if (p.getCommand().getType() == CommandType.OPEN) {
-                /*ATTENZIONE: quando un oggetto contenitore viene aperto, tutti gli oggetti contenuti
-                * vengongo inseriti nella stanza o nell'inventario a seconda di dove si trova l'oggetto contenitore.*/
                 if (p.getObject() == null && p.getInvObject() == null) {
                     spaceRunJFrame.DisplayOutputSetText("Non c'è niente da aprire qui.");
                 } else {
@@ -560,8 +584,12 @@ public class SpaceRun extends GameDescription {
                 //ricerca oggetti usabili
                 if (p.getObject() != null && p.getObject().isUsable()) {
                     if(p.getObject().isUsed() == false){
-                        if (p.getObject().getId() != 17){
-                        spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getObject().getName() + "\n"); }
+                        if (p.getObject().getId() == 17){
+                        } else if (p.getObject().getId() == 13 || p.getObject().getId() == 14) {
+                            spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription() + "\n"); 
+                        } else {
+                            spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getObject().getName() + "\n");
+                        }
                         p.getObject().setUsed(true);
                         if(p.getObject().getId() == 16) {
                             p.getObject().setUsed(false);
@@ -604,10 +632,9 @@ public class SpaceRun extends GameDescription {
                     } else {
                         spaceRunJFrame.DisplayOutputSetText("Oggetto già in uso.");
                     }
-                    
                 } else if (p.getInvObject() != null && p.getInvObject().isUsable()) {
                     if(p.getInvObject().isUsed() == false){
-                        spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getInvObject().getName() + "\n");
+                            spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getInvObject().getName() + "\n");                     
                         p.getInvObject().setUsed(true);
                         if(p.getInvObject().getId() == 6) {
                             spaceRunJFrame.DisplayOutputSetText("Adesso puoi vedere le stanze, attento però, potresti illuminare la faccia di qualche guardia! \n");
@@ -685,8 +712,10 @@ public class SpaceRun extends GameDescription {
             getCurrentRoom().setDescription("Sei nel luungo principale corridoio desolato dell’astronave... Senti dei rumori da est, sembrano suoni terribili, non sai da dove vuoi procedere...");
         } 
     }
-
-
+    
+    /**
+    * Il metodo end(), contiene il messaggio di partita terminata correttamente in maniera completa.
+    */
     private String end() {
         String message = ("Finalmente la navicella si alza in aria, inizi a guidarla sbattendo da destra a sinistra lungo le pareti del porto spaziale."
                 + " Vedi del fumo fuoriuscire da reattore danneggiato, ma ormai ti hanno scoperto tutti non puoi tornare indietro."
@@ -697,37 +726,26 @@ public class SpaceRun extends GameDescription {
     return message;
     }
     
-        public String differentEnd (String command) {
-            String message = "";
-            switch (command) {
-                case "suicidati": case "ammazzati": case "ucciditi":
-                    message = ("Decidi di correre contro gli alieni per porre fine alle tue sofferenze.\nL'aria dello spazio gioca brutti scherzi. ");
-                break;
+    /**
+    * Il metodo differentEnd(), contiene il messaggio di partita terminata prematuramente in base al comando inserito
+    * per visualizzare vari tipi di messaggio finale
+    * @param command è la stringa comando così come è stato inserito dall'utente.
+    */    
+    public String differentEnd(String command) {
+        String message = "";
+        switch (command) {
+            case "suicidati": case "ammazzati": case "ucciditi":
+                message = ("Decidi di correre contro gli alieni per porre fine alle tue sofferenze.\nL'aria dello spazio gioca brutti scherzi. ");
+            break;
                 
-                case "muori":
-                    message = ("Infarto istantaneo. E' stato rapido ed indolore.");
-                break;
+            case "muori":
+                message = ("Infarto istantaneo. E' stato rapido ed indolore.");
+            break;
   
-                case "end": case "fine": case "exit": case "esci":
-                    message = ("Se l'umanità avesse una speranza, adesso non ce l'ha più...");
-                break;
-            }
-            return message;
+            case "end": case "fine": case "exit": case "esci":
+                message = ("Se l'umanità avesse una speranza, adesso non ce l'ha più...");
+            break;
         }
+        return message;
+    }
 }
-
-
-                       /* if (p.getObject().getId() == 17) {
-                            p.getObject().setUsed(false);
-                            if (getCurrentRoom().getId() == 10){
-                                getCurrentRoom().getEast().setLocked(false);
-                                spaceRunJFrame.DisplayOutputSetText("Dalla paura spari. "
-                                        + "Il primo colpo gli annienta solo un piede. L’alieno si rialza e si fionda con un salto verso di te in volo. "
-                                        + "Tu chiudi gli occhi pensando sei spacciato e BAANGG!!! \nSenza manco accorgetene pianti un colpo laser dritto nelle cervella di questo essere."
-                                        + " L’autostima ti sale leggermente, ti senti un eroe per ora. Un eroe cosparso di sangue violaceo… Meglio continuare.  \n");
-                            } else if (getCurrentRoom().getId() == 2){
-                                spaceRunJFrame.DisplayOutputSetText("Gli alieni sono troppi, come ti è saltato in mente di imitare Rambo. Muori in una sparatoria epica.  \n");
-                                spaceRunJFrame.DisplayOutputSetText("\nAddio!");
-                                spaceRunJFrame.ExitDialog(); 
-                            }     
-                        } else{*/

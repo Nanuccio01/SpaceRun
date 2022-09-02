@@ -18,27 +18,34 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- *
- *@author Gaetano
+ * 
+ * @author Gaetano Schiralli, Dafne Spaccavento
  */
 
+/**
+ * La classe SpaceRunJFrame genera l' interfaccia grafica e 
+ * gestisce l'interazione con l'utente. 
+ *
+ * è il punto di partenza dell'intero programma, 
+ * perchè contiene il metodo main che inizialiizza a tutte le operazioni. 
+ */
 public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
     
     private final ExitJDialog exitDialog  = new ExitJDialog(this, true);
     private final PasswordJDialog passwordDialog  = new PasswordJDialog(this, true);
+    private final MapJDialog mapDialog  = new MapJDialog(this, false);
     private final GameDescription game;
     private final Parser parser;
     public static final String SPACERUN_DB = "CREATE TABLE IF NOT EXISTS spaceRunDB (PartitaId VARCHAR PRIMARY KEY, currentRoom INT, inventoryId VARCHAR(100))";
-
+    
     /**
      * Creates new form SpaceRunJFrame
      */
-
     public SpaceRunJFrame() {
         initComponents();
         
-        Thread t = new Thread(this);
-        t.start();
+        Thread time = new Thread(this);
+        time.start();
         
         DisplayOutputArea.setLineWrap(true);
         DisplayOutputArea.setWrapStyleWord(true);
@@ -412,6 +419,10 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
     private javax.swing.JTextField jTimeField;
     // End of variables declaration//GEN-END:variables
 
+
+    /**
+     * Il metodo run() genera il costante aggiornarsi dell'orologio presente nel gioco. 
+    */
     @Override
         public void run(){
         int hour, minute, second;
@@ -428,7 +439,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
             jTimeField.setText(time24);
          }
     } 
-        
+       
     public void DisplayOutputSetText(String s) {
          DisplayOutputArea.append(s);
     }
@@ -441,6 +452,10 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         exitDialog.setVisible(true);
     }
     
+    public void MapDialog() {
+        mapDialog.setVisible(true);
+    }
+    
     public String PasswordDialog() {
         passwordDialog.Clear();
         passwordDialog.setVisible(true);
@@ -448,209 +463,4 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         return psw;
          
     }
-    
- /* private void sendCommand() {
-        if (GameInputField.getText().length() > 0) {
-            String command = GameInputField.getText();
-            ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
-            GameInputField.setText("");
-            
-            if (p.getCommand() != null && p.getCommand().getType() == CommandType.SAVE) {
-                    saveGame(); 
-
-               } else if (p.getCommand() != null && p.getCommand().getType() == CommandType.LOAD) {
-                    
-                    DisplayOutputArea.append("\nChe partita vuoi caricare? Digita il nome della partita");
-                    try{
-                    int cont = 0;
-                    boolean exist_flag = false; //flag per l'esistenza di una partita con lo stesso nome
-                    Connection conn = DriverManager.getConnection("jdbc:h2:./src/main/resources/db/save");
-                    Statement st = conn.createStatement();
-                    st.executeUpdate(SPACERUN_DB);
-                    ResultSet rs = st.executeQuery("SELECT PartitaID FROM spaceRunDB "); 
-                    while (rs.next()){
-                         cont = cont+1;
-                       } 
-                    if (cont > 0){ 
-                        for(int i = 1; i <= cont; i++){
-                        DisplayOutputArea.append("\n "+rs.getString(i)+"");
-                        DisplayOutputArea.append("\nChe partita vuoi caricare? Digita il nome della partita: ");
-                        String input = GameInputField.getText();
-                        while (rs.next()){
-                            String partita = rs.getString(1);
-                            if (partita.equals(input)){
-                            exist_flag = true; 
-                            }
-                        if (exist_flag){
-                        DisplayOutputArea.append("\nCaricamento della partita "+input+" in corso...");
-                        ResultSet rst = st.executeQuery("SELECT * FROM SpaceRunDB WHERE PartitaID = "+input+"");
-                        if (rst.getInt(2) == game.getCurrentRoom().getId()){
-                            
-                        }
-                       
-                        this.game.setCurrentRoom(next);
-                        DisplayOutputArea.append("Ti trovi in: ");
-                        DisplayOutputArea.append(game.getCurrentRoom().getName());
-                        DisplayOutputArea.append("\n");
-                        DisplayOutputArea.append(game.getCurrentRoom().getDescription());
-                        
-                    
-                    } else{
-                        PreparedStatement pst = conn.prepareStatement("INSERT INTO spaceRunDB VALUES (?,?,?)");
-                        pst.setString(1, input);
-                        pst.setInt(2, this.game.getCurrentRoom().getId());
-                        Iterator<AdvObject> it = this.game.getInventory().iterator();
-                        String Obj = "";
-                        while (it.hasNext()) {
-                            flag = true;
-                            AdvObject next = it.next();
-                            Obj = Obj + next.getId() + "#";
-                        }
-
-                        if (flag) {
-                            pst.setString(3, Obj);
-                        } else {
-                            Obj = null;
-                            pst.setString(3, Obj);
-                        }
-                        pst.executeUpdate();
-                        pst.close();
-                    }   
-                        }
-                    }
-                } else {
-                      DisplayOutputArea.append("Non ci sono partite salvate in questo momento. "); 
-                      //mettere opzione se iniziare una nuova partita
-                    }
-                    
-                    }catch (SQLException ex) {
-                    System.err.println(ex.getSQLState() + ": " + ex.getMessage());
-                    }
-                      // controllare uso variabile true, quando true e quando false
-                      
-                    if (!saved) {
-                        int option = JOptionPane.showConfirmDialog(null, "Ci sono modifiche non salvate. Sicuro di voler caricare una nuova partita?", "Caricamento file", JOptionPane.YES_NO_CANCEL_OPTION);
-                        switch (option) {
-                            case JOptionPane.YES_OPTION:
-                                loadGame();
-                                saved = true;
-                                break;
-                            case JOptionPane.NO_OPTION:
-                                saveGame();
-                                break;
-                            case JOptionPane.CANCEL_OPTION:
-                                return;
-                            default:
-                                break;
-                        }
-                    } else {
-                        loadGame();
-                        saved = true;
-                    }
-                }
-
-            } else {
-                DisplayOutputArea.append("\n>> " + command + "\n");
-                DisplayOutputArea.setCaretPosition(0);
-                DisplayOutputArea.setCaretPosition(DisplayOutputArea.getDocument().getLength());
-                if (fast) {
-                    DisplayOutputArea.append(game.nextMove(p));
-                } else {
-                    s.append(game.nextMove(p));
-                }
-                DisplayOutputArea.setCaretPosition(DisplayOutputArea.getDocument().getLength());
-
-                
-                updateInventory();
-                saved = false;
-
-                checkEnd(); 
-                }
-            }
-        }
-    
-    private boolean saveGame() {
-      try {
-                    boolean flag = false;
-                    boolean exist_flag = false; //flag per l'esistenza di una partita con lo stesso nome
-                    Connection conn = DriverManager.getConnection("jdbc:h2:./resources");
-                    Statement st = conn.createStatement();
-                    st.execute("CREATE TABLE IF NOT EXISTS spaceRunDB (PartitaId VARCHAR(100) PRIMARY KEY, currentRoom INT, inventoryId VARCHAR(100))");
-                    st.executeUpdate(SPACERUN_DB);
-                    DisplayOutputArea.append("\nCon che nome vuoi salvare questa partita?");
-                    String input = GameInputField.getText(); //inserire controlli per la parola
-                    ResultSet rs = st.executeQuery("SELECT PartitaID FROM spaceRunDB "); 
-                    while (rs.next()){
-                        String partita = rs.getString(1);
-                        if (partita.equals(input)){
-                            exist_flag = true;
-                        }
-                    }
-                    if (exist_flag){
-                        DisplayOutputArea.append("\nEsiste già una partita salvata con questo nome. Stai sovrascrivendo la vecchia partita...");
-                        PreparedStatement pst = conn.prepareStatement("UPDATE spaceRunDB SET currentRoom = ?, inventoryId = ? WHERE PartitaID = "+input+"");
-                        pst.setInt(2, this.game.getCurrentRoom().getId());
-                        Iterator<AdvObject> it = this.game.getInventory().iterator();
-                        String Obj = "";
-                        while (it.hasNext()) {
-                            flag = true;
-                            AdvObject next = it.next();
-                            Obj = Obj + next.getId() + "#";
-                        }
-
-                        if (flag) {
-                            pst.setString(3, Obj);
-                        } else {
-                            Obj = null;
-                            pst.setString(3, Obj);
-                        }
-                        pst.executeUpdate();
-                        pst.close();
-                    } else{
-                        PreparedStatement pst = conn.prepareStatement("INSERT INTO spaceRunDB VALUES (?,?,?)");
-                        pst.setString(1, input);
-                        pst.setInt(2, this.game.getCurrentRoom().getId());
-                        Iterator<AdvObject> it = this.game.getInventory().iterator();
-                        String Obj = "";
-                        while (it.hasNext()) {
-                            flag = true;
-                            AdvObject next = it.next();
-                            Obj = Obj + next.getId() + "#";
-                        }
-
-                        if (flag) {
-                            pst.setString(3, Obj);
-                        } else {
-                            Obj = null;
-                            pst.setString(3, Obj);
-                        }
-                        pst.executeUpdate();
-                        pst.close();
-                    } 
-                    
-                    st.close();
-                    DisplayOutputArea.append("\nSalvataggio effettuato correttamente!");
-                    saved = true;
-                    
-                    } catch (SQLException ex) {
-                    System.err.println(ex.getSQLState() + ": " + ex.getMessage());
-                    DisplayOutputArea.append("\nSalvataggio non riuscito");
-                }  
-                return saved;      //variabile booleana per il salvataggio
-    }
-    
-    private void loadGame(){
-        try {
-  
-                    boolean flag = false;
-                    boolean exist_flag = false; //flag per l'esistenza di una partita con lo stesso nome
-                    Connection conn = DriverManager.getConnection("jdbc:h2:./src/main/resources/db/save");
-                    Statement st = conn.createStatement();
-                    st.executeUpdate(SPACERUN_DB);
-                    DisplayOutputArea.append("\n");
-                    
-        } catch (SQLException ex) {
-                    System.err.println(ex.getSQLState() + ": " + ex.getMessage());
-        }
-    }*/
 }

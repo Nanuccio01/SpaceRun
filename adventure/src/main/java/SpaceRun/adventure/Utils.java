@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package SpaceRun.adventure;
 
 import java.io.BufferedReader;
@@ -16,12 +11,8 @@ import java.util.Set;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-/**
- *
- * @author pierpaolo
- */
 public class Utils {
-
+    
     public static Set<String> loadFileListInSet(File file) {
         Set<String> set = new HashSet<>();
         BufferedReader reader = null;
@@ -43,7 +34,6 @@ public class Utils {
         return set;
     }
 
-
     public static List<String> parseString(String string, Set<String> stopwords) {
         List<String> tokens = new ArrayList<>();
         String[] split = string.toLowerCase().split("\\s+");
@@ -53,6 +43,5 @@ public class Utils {
             }
         }
         return tokens;
-    }
-    
+    }    
 }

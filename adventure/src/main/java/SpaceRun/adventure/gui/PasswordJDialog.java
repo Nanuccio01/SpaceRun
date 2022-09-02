@@ -6,7 +6,7 @@ package SpaceRun.adventure.gui;
 
 /**
  *
- * @author Gaetano
+  * @author Gaetano Schiralli, Dafne Spaccavento
  */
 public class PasswordJDialog extends javax.swing.JDialog {
 
