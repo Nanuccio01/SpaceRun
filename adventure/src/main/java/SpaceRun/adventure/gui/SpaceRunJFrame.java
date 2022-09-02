@@ -439,6 +439,23 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
             jTimeField.setText(time24);
          }
     } 
+    
+    /**
+     * Il metodo enableElements() dopo la fine del gioco, 
+     * disattiva tutti i pulsanti neccessari a non far continuare la partita all'utente
+     * 
+     * @param enable flag booleano corrispondente alla visibilità o meno delle componenti grafiche
+    */
+    public void enableElements(boolean enable) {
+            GameInputField.setEditable(enable);
+            NorthButton.setEnabled(enable);
+            SouthButton.setEnabled(enable);
+            EastButton.setEnabled(enable);
+            WestButton.setEnabled(enable);
+            LookButton.setEnabled(enable);
+            EnterButton.setEnabled(enable);         
+    }    
+        
        
     public void DisplayOutputSetText(String s) {
          DisplayOutputArea.append(s);

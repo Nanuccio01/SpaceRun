@@ -8,6 +8,8 @@ SpaceRun\adventure\type\Command.class
 SpaceRun\adventure\type\AdvObjectContainer.class
 SpaceRun\adventure\gui\SpaceRunJFrame$1.class
 SpaceRun\adventure\gui\SpaceRunJFrame$8.class
+SpaceRun\adventure\gui\MapJDialog$1$1.class
+SpaceRun\adventure\gui\MapJDialog.class
 SpaceRun\adventure\gui\ExitJDialog$1.class
 SpaceRun\adventure\gui\ExitJDialog$3.class
 SpaceRun\adventure\gui\PasswordJDialog$12.class
@@ -18,6 +20,7 @@ SpaceRun\adventure\gui\PasswordJDialog.class
 SpaceRun\adventure\gui\SpaceRunJFrame$5.class
 SpaceRun\adventure\parser\ParserOutput.class
 SpaceRun\adventure\gui\ExitJDialog.class
+SpaceRun\adventure\gui\MapJDialog$1.class
 SpaceRun\adventure\gui\PasswordJDialog$6.class
 SpaceRun\adventure\gui\PasswordJDialog$10.class
 SpaceRun\adventure\type\Room.class

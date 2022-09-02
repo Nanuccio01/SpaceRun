@@ -625,6 +625,7 @@ public class SpaceRun extends GameDescription {
                                 spaceRunJFrame.DisplayOutputSetText("Gli alieni sono troppi, come ti è saltato in mente di imitare Rambo. Muori in una sparatoria epica.  \n");
                                 spaceRunJFrame.DisplayOutputSetText("\nAddio!");
                                 spaceRunJFrame.ExitDialog(); 
+                                spaceRunJFrame.enableElements(false);
                             } else {
                                 spaceRunJFrame.DisplayOutputSetText("Non possiedi niente per uccidere l'alieno.  \n");
                             }
@@ -655,6 +656,7 @@ public class SpaceRun extends GameDescription {
                                 spaceRunJFrame.DisplayOutputSetText("Gli alieni sono troppi, come ti è saltato in mente di imitare Rambo. Muori in una sparatoria epica.  \n");
                                 spaceRunJFrame.DisplayOutputSetText("\nAddio!");
                                 spaceRunJFrame.ExitDialog(); 
+                                spaceRunJFrame.enableElements(false);
                             }     
                         }
                     } else {
@@ -671,7 +673,8 @@ public class SpaceRun extends GameDescription {
                 String message = differentEnd(command);
                 spaceRunJFrame.DisplayOutputSetText(message);
                 spaceRunJFrame.DisplayOutputSetText("\nAddio!");
-                spaceRunJFrame.ExitDialog();   
+                spaceRunJFrame.ExitDialog();
+                spaceRunJFrame.enableElements(false);
             }
             if (noroom) {
                  if (p.getCommand().getType() == CommandType.NORD && getCurrentRoom().getNorth() == null && getCurrentRoom().getId() == 2) {
@@ -749,3 +752,22 @@ public class SpaceRun extends GameDescription {
         return message;
     }
 }
+
+
+
+   /* private void NewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewMenuItemActionPerformed
+        if (!saved && !game.isEnd()) {
+            int option = JOptionPane.showConfirmDialog(null, "Ci sono modifiche non salvate. Sicuro di voler cominciare una nuova partita?", "Nuova partita", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                init();
+                saved = true;
+            } else if (option == JOptionPane.NO_OPTION) {
+                saveFile();
+            } else if (option == JOptionPane.CANCEL_OPTION) {
+                return;
+            }
+        } else {
+            init();
+            saved = true;
+        }
+    }*/
