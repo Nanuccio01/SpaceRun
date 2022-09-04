@@ -16,17 +16,18 @@ Non è utilizzabile un menù di help con la lista di tutti i comandi visto che l
 Il resto è tutto presente nel gioco, cosa aspettate??
 
 ## Tecniche utilizzate: 
-- Programmazione ad oggetti:
+- Programmazione ad oggetti
 - File: utilizzati per l’inizializzazione delle stanze, degli oggetti e dei rispettivi parametri; Utili per implementare facilmente altre avventure tesuali e per facilitare la futura manutenzione di esse.
 - Thread: utilizzato constantemente dall'avvio alla fine dell'esecuzione, per mantenere costantemente aggiornato l'orario attuale, utile al giocatore.
 - Swing: per costruire l’interfaccia grafica dell’applicazione precedentemente e abbondantemente descritta.
 - Rest/Servlet:
-- Collection:
+- Collection: 
+    - Arraylist per organizzare i dati delle stanze, degli oggetti, dell'inventario e dei comandi.
+    - Iterator per le ricerche negli Arraylist.
+    - Tipo enumerativo per classificare i comandi inseribili dell’utente.
+    - Set per creare gli alias, semplificando il riferimento ad oggetti, stanze e comandi.
 - Database H2 utilizzato per il salvataggio e il caricamento della partita.
-- Lambda Expression:
-
-
-Abbiamo utilizzato alcune Collection come Arraylist per organizzare i dati delle stanze e oggetti in maniera più ordinata, iterator per rendere le ricerche negli arraylist più veloci e semplici, il tipo enumerativo per il tipo dei comandi inseribili dell’utente, i set per creare gli alias, rendendo molto più semplice il riferimento ad oggetti, stanze e azioni da svolgere.
+- Lambda Expression: 
 
 ## Diagramma delle classi:
 
