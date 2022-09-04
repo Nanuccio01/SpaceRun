@@ -36,8 +36,4 @@ Abbiamo utilizzato alcune Collection come Arraylist per organizzare i dati delle
 
 ## Autori e sviluppatori del gioco:
 -	Gaetano Schiralli
-<<<<<<< HEAD
 -	Dafne Spaccavento
-=======
--	Dafne Spaccavento
->>>>>>> e74c8e56ac6e3eed65f7f781e4fa0b292ef2f5ea
