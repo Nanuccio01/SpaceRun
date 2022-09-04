@@ -79,7 +79,7 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
             //Inizializzazione della visualizzazione dell'inventario
             InventoryTextArea.setText("      Zainetto");
             InventoryTextArea.append("\n-------------------\n");
-            
+ 
         }catch (Exception ex) {
             System.err.println(ex);
         }
@@ -340,10 +340,10 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
 
     private void GameInputFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GameInputFieldActionPerformed
         String command = evt.getActionCommand();
-            ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
-            GameInputField.setText("");
-            DisplayOutputArea.append("\n>> " + command + "\n\n");
-            game.nextMove(p, this, command); 
+        ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
+        GameInputField.setText("");
+        DisplayOutputArea.append("\n>> " + command + "\n\n");
+        game.nextMove(p, this, command); 
     }//GEN-LAST:event_GameInputFieldActionPerformed
 
     private void EastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EastButtonActionPerformed

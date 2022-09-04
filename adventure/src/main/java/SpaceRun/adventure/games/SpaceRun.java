@@ -41,6 +41,7 @@ public class SpaceRun extends GameDescription {
     * Il metodo init() si occupa del caricamento tramite file di informazioni neecessarie
     * al popolamento delle liste relative ai comandi, alle stanze e agli oggetti, iniziando così
     * la partita con l'assegnazione della stanza iniziale della mappa creata.
+     * @throws java.lang.Exception
     */
     @Override
     public void init() throws Exception {
@@ -90,10 +91,10 @@ public class SpaceRun extends GameDescription {
         mike.setAlias(new String[]{"MIKE","Mike"});
         getCommands().add(mike);
         Command save = new Command(CommandType.SAVE, "salva");
-        mike.setAlias(new String[]{"salvataggio"});
+        save.setAlias(new String[]{"salvataggio"});
         getCommands().add(save);
         Command load = new Command(CommandType.LOAD, "carica");
-        mike.setAlias(new String[]{"riprendi"});
+        load.setAlias(new String[]{"riprendi"});
         getCommands().add(load);
         
         //Stanze
@@ -357,7 +358,7 @@ public class SpaceRun extends GameDescription {
     @Override
     public void nextMove(ParserOutput p, SpaceRunJFrame spaceRunJFrame, String command) {
         if (p.getCommand() == null) {
-            spaceRunJFrame.DisplayOutputSetText("Non ho capito cosa devo fare! Prova con un altro comando.");
+            spaceRunJFrame.DisplayOutputSetText("Non ho capito cosa devo fare! Prova con un altro comando. \n");
         } else {
             //move
             boolean noroom = false;
