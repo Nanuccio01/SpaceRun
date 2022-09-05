@@ -34,9 +34,9 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
     private final ExitJDialog exitDialog  = new ExitJDialog(this, true);
     private final PasswordJDialog passwordDialog  = new PasswordJDialog(this, true);
     private final MapJDialog mapDialog  = new MapJDialog(this, false);
+    private final SaveJDialog saveDialog  = new SaveJDialog(this, true);
     private final GameDescription game;
     private final Parser parser;
-    public static final String SPACERUN_DB = "CREATE TABLE IF NOT EXISTS spaceRunDB (PartitaId VARCHAR PRIMARY KEY, currentRoom INT, inventoryId VARCHAR(100))";
     
     /**
      * Creates new form SpaceRunJFrame
@@ -461,8 +461,12 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
          DisplayOutputArea.append(s);
     }
     
-    public void InventoryOutputSetText(String s) {
+    public void InventoryOutputAppend(String s) {
          InventoryTextArea.append(s);
+    }
+    
+    public void InventoryOutputSetText(String s) {
+         InventoryTextArea.setText(s);
     }
     
     public void ExitDialog() {
@@ -477,7 +481,12 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         passwordDialog.Clear();
         passwordDialog.setVisible(true);
         String psw = passwordDialog.PswDialog();
-        return psw;
-         
+        return psw;     
+    }
+    
+    public String SaveDialog() {
+        saveDialog.setVisible(true);
+        String saving = saveDialog.SavDialog();
+        return saving;     
     }
 }

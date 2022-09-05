@@ -17,6 +17,7 @@ import static com.sun.tools.javac.util.StringUtils.toUpperCase;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.*;
 import java.util.Calendar;
 import java.util.Iterator;
 
@@ -466,7 +467,7 @@ public class SpaceRun extends GameDescription {
                         getInventory().add(p.getObject());
                         getCurrentRoom().getObjects().remove(p.getObject());
                         spaceRunJFrame.DisplayOutputSetText("Hai raccolto: " + p.getObject().getName()+ " ->" + p.getObject().getDescription() + "\n");
-                        spaceRunJFrame.InventoryOutputSetText(" -"+ p.getObject().getName() + "\n");
+                        spaceRunJFrame.InventoryOutputAppend(" -"+ p.getObject().getName() + "\n");
                         if(p.getObject().getId() == 11) {
                             spaceRunJFrame.DisplayOutputSetText("Tessera di riconoscimento presa! Sembra essere di un alieno importante, dovresti aver il lasciapassare per tutte le stanze dell’astronave. \n");
                             Iterator<Room> roomIt = getRooms().iterator();
@@ -566,7 +567,7 @@ public class SpaceRun extends GameDescription {
                                         AdvObject next = it.next();
                                         getInventory().add(next);
                                         if (next.isPickupable()) {
-                                            spaceRunJFrame.InventoryOutputSetText("  "+ next.getName() + "\n");
+                                            spaceRunJFrame.InventoryOutputAppend("  "+ next.getName() + "\n");
                                         }
                                         spaceRunJFrame.DisplayOutputSetText(next.getName() + " | " );
                                         it.remove();
@@ -669,8 +670,182 @@ public class SpaceRun extends GameDescription {
                     } else {
                         spaceRunJFrame.DisplayOutputSetText("Non puoi usare questo oggetto. ");
                     }
-                } 
-            }  else if (p.getCommand().getType() == CommandType.END) {
+                }    
+            } else if (p.getCommand().getType() == CommandType.SAVE) {
+                 try {
+                    boolean flag = false;  //flag per l'esistenza del next
+                    boolean exist_flag = false; //flag per l'esistenza di una partita con lo stesso nome
+      
+                        Connection con = DriverManager.getConnection("jdbc:h2:" + "./Database/my", "root", "mypassword");
+                        Statement stmt = con.createStatement();
+                        String spaceRunDB = "CREATE TABLE IF NOT EXISTS SPACERUN_DB "
+                            + "(PartitaId VARCHAR(100), "
+                            + "currentRoom INT, "
+                            + "inventoryId VARCHAR(100),"
+                            + "PRIMARY KEY (PartitaId))";
+             
+                        stmt.executeUpdate(spaceRunDB);
+             
+                    String input = spaceRunJFrame.SaveDialog(); 
+                    spaceRunJFrame.DisplayOutputSetText(input); 
+                    ResultSet rs = stmt.executeQuery("SELECT PartitaID FROM SPACERUN_DB "); 
+                    while (rs.next()){
+                        String partita = rs.getString(1); 
+                        if (partita.equals(input)){
+                            exist_flag = true;
+                        }
+                    }
+                    if (exist_flag){
+                        spaceRunJFrame.DisplayOutputSetText("\nEsiste già una partita salvata con questo nome. Stai sovrascrivendo la vecchia partita...");
+                        PreparedStatement pst = con.prepareStatement("UPDATE SPACERUN_DB SET currentRoom = ?, inventoryId = ? WHERE PartitaID = "+input+"");
+                        pst.setInt(1, getCurrentRoom().getId());
+                        Iterator<AdvObject> it = getInventory().iterator();
+                        String Obj = "";
+                        while (it.hasNext()) {
+                            flag = true;
+                            AdvObject next = it.next();
+                            Obj = Obj + next.getId() + "#";
+                        }
+
+                        if (flag) {
+                            pst.setString(2, Obj);
+                        } else {
+                            Obj = null;
+                            pst.setString(2, Obj);
+                        }
+                        pst.executeUpdate();
+                        pst.close();
+                    } else{
+                        PreparedStatement pstm = con.prepareStatement("INSERT INTO SPACERUN_DB VALUES (?,?,?)");
+                        pstm.setString(1, input);
+                        pstm.setInt(2, getCurrentRoom().getId());
+                        Iterator<AdvObject> it = getInventory().iterator();
+                        String Obj = "";
+                        while (it.hasNext()) {
+                            flag = true;
+                            AdvObject next = it.next();
+                            Obj = Obj + next.getId() + "#";
+                        }
+
+                        if (flag) {
+                            pstm.setString(3, Obj);
+                        } else {
+                            Obj = null;
+                            pstm.setString(3, Obj);
+                        }
+                        pstm.executeUpdate();
+                        pstm.close();
+                    } 
+                    
+                    stmt.close();
+                    spaceRunJFrame.DisplayOutputSetText("\nSalvataggio effettuato correttamente!");
+                    //saved = true;
+                    
+                    } catch (SQLException ex) {
+                    spaceRunJFrame.DisplayOutputSetText(ex.getSQLState() + ": " + ex.getMessage());
+                    spaceRunJFrame.DisplayOutputSetText("\nSalvataggio non riuscito");
+                }  
+                
+            }  else if (p.getCommand().getType() == CommandType.LOAD) {
+                try {
+  
+                    boolean flag = false;
+                    boolean exist_flag = false; //flag per l'esistenza di una partita con lo stesso nome
+                    
+                    String[] objInventory;
+                    int i;
+                    
+                    Connection con = DriverManager.getConnection("jdbc:h2:" + "./Database/my", "root", "mypassword");
+                    Statement st = con.createStatement();
+                    
+                    String spaceRunDB = "CREATE TABLE IF NOT EXISTS SPACERUN_DB "
+                        + "(PartitaId VARCHAR(100), "
+                        + "currentRoom INT, "
+                        + "inventoryId VARCHAR(100),"
+                        + "PRIMARY KEY (PartitaId))";
+             
+                    st.executeUpdate(spaceRunDB);
+                    String input = spaceRunJFrame.SaveDialog(); //inserire controlli per la parola
+                    spaceRunJFrame.DisplayOutputSetText(input);
+                    ResultSet rs = st.executeQuery("SELECT PartitaID FROM SPACERUN_DB "); 
+                    while (rs.next()){
+                        String partita = rs.getString(1);
+                        if (partita.equals(input)){
+                            exist_flag = true;
+                        }
+                    }
+                    if (exist_flag){
+                        spaceRunJFrame.DisplayOutputSetText("\n Caricamento in corso...");
+                        ResultSet rts = st.executeQuery("SELECT * FROM SPACERUN_DB WHERE PartitaID = "+input+"");
+                        if (rts.next()) {
+                            Iterator<Room> rm = getRooms().iterator();
+                            while (rm.hasNext()) {
+                                Room next = rm.next();
+                                if (next.getId() == rts.getInt(2)) {
+                                    setCurrentRoom(next);
+                                    spaceRunJFrame.DisplayOutputSetText("Ora ti trovi in: " + toUpperCase(getCurrentRoom().getName()));
+                                    spaceRunJFrame.DisplayOutputSetText("\n==================================================================\n");
+                                    spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getDescription() + "\n");
+                                }
+                            }
+                            if (rts.getString(3) != null) {
+                                objInventory = rts.getString(3).split("#");
+                                Iterator<Room> roomIt = getRooms().iterator();
+                                while (roomIt.hasNext()) {
+                                    Room nextRoom = roomIt.next();
+                                    Iterator<AdvObject> objectIt = nextRoom.getObjects().iterator();
+                                    while (objectIt.hasNext()) {
+                                        AdvObject nextObject = objectIt.next();
+
+                                        for (i = 0; objInventory.length - 1 >= i; i++) {
+
+                                            if (Integer.parseInt(objInventory[i]) == nextObject.getId()) {
+                                                getInventory().add(nextObject);
+                                                objectIt.remove();
+                                            }
+
+                                        }
+
+                                        if (nextObject instanceof AdvObjectContainer) {
+                                            AdvObjectContainer nextObjectContainer = (AdvObjectContainer) nextObject;
+
+                                            if (!nextObjectContainer.getList().isEmpty()) {
+                                                Iterator<AdvObject> containerIt = nextObjectContainer.getList().iterator();
+                                                while (containerIt.hasNext()) {
+                                                    AdvObject nextObjContained = containerIt.next();
+
+                                                    for (i = 0; objInventory.length - 1 >= i; i++) {
+
+                                                        if (nextObjContained.getId() == Integer.parseInt(objInventory[i])) {
+                                                            getInventory().add(nextObjContained);
+                                                            containerIt.remove();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // spaceRunJFrame.InventoryOutputSetText("\t\t Zainetto");
+                            //spaceRunJFrame.InventoryOutputAppend("\n--------------------------");
+                            Iterator<AdvObject> it = getInventory().iterator();
+                            while (it.hasNext()) {
+                                AdvObject nextObj = it.next();
+                                spaceRunJFrame.InventoryOutputAppend("\n- " + nextObj.getName());
+                            }
+                        }
+                        rs.close();
+                        rts.close();
+                        st.close();    
+                    } else {
+                         spaceRunJFrame.DisplayOutputSetText("\nCodice inesistente: caricamento non riuscito.");
+                    }    
+                }catch (SQLException ex) {
+                   spaceRunJFrame.DisplayOutputSetText(ex.getSQLState() + ": " + ex.getMessage());
+                   spaceRunJFrame.DisplayOutputSetText("\nCaricamento non riuscito");
+                }
+        } else if (p.getCommand().getType() == CommandType.END) {
                 String message = differentEnd(command);
                 spaceRunJFrame.DisplayOutputSetText(message);
                 spaceRunJFrame.DisplayOutputSetText("\nAddio!");
