@@ -662,13 +662,13 @@ public class SpaceRun extends GameDescription {
                             }     
                         }
                     } else {
-                        spaceRunJFrame.DisplayOutputSetText("Oggetto già in uso.");
+                        spaceRunJFrame.DisplayOutputSetText("Oggetto già in uso. \n");
                     } 
                 } else {
                     if ((p.getObject().getId() == 13 || p.getObject().getId() == 14 || p.getObject().getId() == 15) && p.getObject().isUsable() == false){
-                        spaceRunJFrame.DisplayOutputSetText("Non hai i requisiti necessari per fare ciò. Se insisti si attiverà l’allarme di sicurezza. ");
+                        spaceRunJFrame.DisplayOutputSetText("Non hai i requisiti necessari per fare ciò. Se insisti si attiverà l’allarme di sicurezza. \n");
                     } else {
-                        spaceRunJFrame.DisplayOutputSetText("Non puoi usare questo oggetto. ");
+                        spaceRunJFrame.DisplayOutputSetText("Non puoi usare questo oggetto. \n");
                     }
                 }    
             } else if (p.getCommand().getType() == CommandType.SAVE) {
@@ -697,7 +697,7 @@ public class SpaceRun extends GameDescription {
                     }
                     if (exist_flag){
                         spaceRunJFrame.DisplayOutputSetText("\nEsiste già una partita salvata con questo nome. Stai sovrascrivendo la vecchia partita...");
-                        PreparedStatement pst = con.prepareStatement("UPDATE SPACERUN_DB SET currentRoom = ?, inventoryId = ? WHERE PartitaID = "+input+"");
+                        PreparedStatement pst = con.prepareStatement("UPDATE SPACERUN_DB SET currentRoom = ?, inventoryId = ? WHERE PartitaID = '"+input+"'");
                         pst.setInt(1, getCurrentRoom().getId());
                         Iterator<AdvObject> it = getInventory().iterator();
                         String Obj = "";
@@ -766,7 +766,7 @@ public class SpaceRun extends GameDescription {
              
                     st.executeUpdate(spaceRunDB);
                     String input = spaceRunJFrame.SaveDialog(); //inserire controlli per la parola
-                    spaceRunJFrame.DisplayOutputSetText(input);
+                    spaceRunJFrame.DisplayOutputSetText("\nCaricamento partita:" + input);
                     ResultSet rs = st.executeQuery("SELECT PartitaID FROM SPACERUN_DB "); 
                     while (rs.next()){
                         String partita = rs.getString(1);
@@ -775,8 +775,8 @@ public class SpaceRun extends GameDescription {
                         }
                     }
                     if (exist_flag){
-                        spaceRunJFrame.DisplayOutputSetText("\n Caricamento in corso...");
-                        ResultSet rts = st.executeQuery("SELECT * FROM SPACERUN_DB WHERE PartitaID = "+input+"");
+                        spaceRunJFrame.DisplayOutputSetText("\nCaricamento in corso... \n");
+                        ResultSet rts = st.executeQuery("SELECT * FROM SPACERUN_DB WHERE PartitaID = '"+input+"'");
                         if (rts.next()) {
                             Iterator<Room> rm = getRooms().iterator();
                             while (rm.hasNext()) {
