@@ -18,8 +18,14 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * La descrizione del gioco è fatta in modo che qualsiasi gioco
@@ -253,14 +259,14 @@ public class SpaceRun extends GameDescription {
             AdvObject laserGun = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
             laserGun.setAlias(new String[]{"pistola", "pistola laser"});
             laserGun.setUsable(true);
-            box.add(laserGun);  
+            drawer.add(laserGun);  
             
             lineObjects = brObjects.readLine(); //6
             setParam = lineObjects.split("#");
             AdvObject torch = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
             torch.setAlias(new String[]{"torcia", "luce"});
             torch.setUsable(true);
-            box.add(torch);
+            drawer.add(torch);
             
             lineObjects = brObjects.readLine(); //7
             setParam = lineObjects.split("#");
@@ -365,7 +371,6 @@ public class SpaceRun extends GameDescription {
             boolean noroom = false;
             boolean move = false;
             boolean blocked = false;
-
             if (p.getCommand().getType() == CommandType.NORD) {
                 if (getCurrentRoom().getNorth() != null) {
                     if (getCurrentRoom().getNorth().isLocked() == false) {
@@ -437,7 +442,7 @@ public class SpaceRun extends GameDescription {
                                 }
                             }
                         } else if ((p.getObject().getId() == 13 || p.getObject().getId() == 14 || p.getObject().getId() == 15) && p.getObject().isUsable() == false){
-                        spaceRunJFrame.DisplayOutputSetText("Non hai i requisiti necessari per fare ciò. Se insisti si attiverà l’allarme di sicurezza. \n");
+                            spaceRunJFrame.DisplayOutputSetText("Non hai i requisiti necessari per fare ciò. Se insisti si attiverà l’allarme di sicurezza. \n");
                         } else {
                             spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription() + "\n");
                         }
@@ -544,10 +549,11 @@ public class SpaceRun extends GameDescription {
                                         + " È un vecchio regalo di compleanno, un orologio donato dal tuo ormai lontano padre. "
                                         + "Decidi di custodirlo con cura. Potrebbe tornarti utile.   \n");
                             } else if (p.getObject().getId() == 2){
-                                spaceRunJFrame.DisplayOutputSetText("Noti una scatola in cui intravedi oggetti che potrebbero servirti e accanto ci sono scartoffie che però potrebbero rivelarti il motivo per il quale sei lì."
+                                spaceRunJFrame.DisplayOutputSetText("Noti una scatola piena di oggetti con accanto delle scartoffie che potrebbero rivelarti il motivo per il quale sei lì. "
+                                        + "Si c'è anche una torcia ed una pistola."
                                         + " Non hai molto tempo però, sbrigati!  \n");
                             } else if (p.getObject().getId() == 3){
-                                spaceRunJFrame.DisplayOutputSetText("Vedi una tazza, una foto di famiglia, una penna, una torcia ed una pistola laser."
+                                spaceRunJFrame.DisplayOutputSetText("Vedi una tazza, una foto di famiglia e una penna"
                                         + " Sembra quasi che abbiano preso tutti gli oggetti presenti su una scrivania di un carabiniere! Tranne la pistola ovviamente… \n");
                             }   
                         } else {
@@ -637,7 +643,7 @@ public class SpaceRun extends GameDescription {
                     }
                 } else if (p.getInvObject() != null && p.getInvObject().isUsable()) {
                     if(p.getInvObject().isUsed() == false){
-                            spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getInvObject().getName() + "\n");                     
+                        spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getInvObject().getName() + "\n");                     
                         p.getInvObject().setUsed(true);
                         if(p.getInvObject().getId() == 6) {
                             spaceRunJFrame.DisplayOutputSetText("Adesso puoi vedere le stanze, attento però, potresti illuminare la faccia di qualche guardia! \n");
@@ -673,9 +679,9 @@ public class SpaceRun extends GameDescription {
                 }    
             } else if (p.getCommand().getType() == CommandType.SAVE) {
                  try {
-                    boolean flag = false;  //flag per l'esistenza del next
+                    boolean flag_next = false;  //flag per l'esistenza del next
                     boolean exist_flag = false; //flag per l'esistenza di una partita con lo stesso nome
-      
+                    
                         Connection con = DriverManager.getConnection("jdbc:h2:" + "./Database/my", "root", "mypassword");
                         Statement stmt = con.createStatement();
                         String spaceRunDB = "CREATE TABLE IF NOT EXISTS SPACERUN_DB "
@@ -685,73 +691,70 @@ public class SpaceRun extends GameDescription {
                             + "PRIMARY KEY (PartitaId))";
              
                         stmt.executeUpdate(spaceRunDB);
-             
+                    
+                    Pattern alfabeto = Pattern.compile("^([a-zA-Z0-9]{2,15})$");
                     String input = spaceRunJFrame.SaveDialog(); 
-                    spaceRunJFrame.DisplayOutputSetText(input); 
-                    ResultSet rs = stmt.executeQuery("SELECT PartitaID FROM SPACERUN_DB "); 
-                    while (rs.next()){
-                        String partita = rs.getString(1); 
-                        if (partita.equals(input)){
-                            exist_flag = true;
+                    Matcher matcher = alfabeto.matcher(input);
+                    if(matcher.matches()){
+                        spaceRunJFrame.DisplayOutputSetText(input); 
+                        ResultSet rs = stmt.executeQuery("SELECT PartitaID FROM SPACERUN_DB "); 
+                        while (rs.next()){
+                            String partita = rs.getString(1); 
+                            if (partita.equals(input)){
+                                exist_flag = true;
+                            }
                         }
+                        if (exist_flag){
+                            spaceRunJFrame.DisplayOutputSetText("\nEsiste già una partita salvata con questo nome. Stai sovrascrivendo la vecchia partita...\n");
+                            PreparedStatement pst = con.prepareStatement("UPDATE SPACERUN_DB SET currentRoom = ?, inventoryId = ? WHERE PartitaID = '"+input+"'");
+                            pst.setInt(1, getCurrentRoom().getId());
+                            Iterator<AdvObject> it = getInventory().iterator();
+                            String Obj = "";
+                            while (it.hasNext()) {
+                                flag_next = true;
+                                AdvObject next = it.next();
+                                Obj = Obj + next.getId() + "#";
+                            }
+                            if (flag_next) {
+                                pst.setString(2, Obj);
+                            } else {
+                                Obj = null;
+                                pst.setString(2, Obj);
+                            }
+                            pst.executeUpdate();
+                            pst.close();
+                        } else{
+                            PreparedStatement pstm = con.prepareStatement("INSERT INTO SPACERUN_DB VALUES (?,?,?)");
+                            pstm.setString(1, input);
+                            pstm.setInt(2, getCurrentRoom().getId());
+                            Iterator<AdvObject> it = getInventory().iterator();
+                            String Obj = "";
+                            while (it.hasNext()) {
+                                flag_next = true;
+                                AdvObject next = it.next();
+                                Obj = Obj + next.getId() + "#";
+                            }
+                            if (flag_next) {
+                                pstm.setString(3, Obj);
+                            } else {
+                                Obj = null;
+                                pstm.setString(3, Obj);
+                            }
+                            pstm.executeUpdate();
+                            pstm.close();
+                        } 
+                        stmt.close();
+                        spaceRunJFrame.DisplayOutputSetText("\nSalvataggio effettuato correttamente!\n");
+                    } else {
+                        spaceRunJFrame.DisplayOutputSetText("Nome non accettato. Reinserire ID salvataggio.\n");
                     }
-                    if (exist_flag){
-                        spaceRunJFrame.DisplayOutputSetText("\nEsiste già una partita salvata con questo nome. Stai sovrascrivendo la vecchia partita...");
-                        PreparedStatement pst = con.prepareStatement("UPDATE SPACERUN_DB SET currentRoom = ?, inventoryId = ? WHERE PartitaID = '"+input+"'");
-                        pst.setInt(1, getCurrentRoom().getId());
-                        Iterator<AdvObject> it = getInventory().iterator();
-                        String Obj = "";
-                        while (it.hasNext()) {
-                            flag = true;
-                            AdvObject next = it.next();
-                            Obj = Obj + next.getId() + "#";
-                        }
-
-                        if (flag) {
-                            pst.setString(2, Obj);
-                        } else {
-                            Obj = null;
-                            pst.setString(2, Obj);
-                        }
-                        pst.executeUpdate();
-                        pst.close();
-                    } else{
-                        PreparedStatement pstm = con.prepareStatement("INSERT INTO SPACERUN_DB VALUES (?,?,?)");
-                        pstm.setString(1, input);
-                        pstm.setInt(2, getCurrentRoom().getId());
-                        Iterator<AdvObject> it = getInventory().iterator();
-                        String Obj = "";
-                        while (it.hasNext()) {
-                            flag = true;
-                            AdvObject next = it.next();
-                            Obj = Obj + next.getId() + "#";
-                        }
-
-                        if (flag) {
-                            pstm.setString(3, Obj);
-                        } else {
-                            Obj = null;
-                            pstm.setString(3, Obj);
-                        }
-                        pstm.executeUpdate();
-                        pstm.close();
-                    } 
-                    
-                    stmt.close();
-                    spaceRunJFrame.DisplayOutputSetText("\nSalvataggio effettuato correttamente!");
-                    //saved = true;
-                    
-                    } catch (SQLException ex) {
+                } catch (SQLException ex) {
                     spaceRunJFrame.DisplayOutputSetText(ex.getSQLState() + ": " + ex.getMessage());
-                    spaceRunJFrame.DisplayOutputSetText("\nSalvataggio non riuscito");
-                }  
-                
-            }  else if (p.getCommand().getType() == CommandType.LOAD) {
+                    spaceRunJFrame.DisplayOutputSetText("\nSalvataggio non riuscito\n");
+                }    
+            } else if (p.getCommand().getType() == CommandType.LOAD) {           
                 try {
-  
-                    boolean flag = false;
-                    boolean exist_flag = false; //flag per l'esistenza di una partita con lo stesso nome
-                    
+                    boolean exist_flag = false;
                     String[] objInventory;
                     int i;
                     
@@ -763,62 +766,75 @@ public class SpaceRun extends GameDescription {
                         + "currentRoom INT, "
                         + "inventoryId VARCHAR(100),"
                         + "PRIMARY KEY (PartitaId))";
-             
                     st.executeUpdate(spaceRunDB);
-                    String input = spaceRunJFrame.SaveDialog(); //inserire controlli per la parola
-                    spaceRunJFrame.DisplayOutputSetText("\nCaricamento partita:" + input);
-                    ResultSet rs = st.executeQuery("SELECT PartitaID FROM SPACERUN_DB "); 
-                    while (rs.next()){
-                        String partita = rs.getString(1);
-                        if (partita.equals(input)){
-                            exist_flag = true;
-                        }
-                    }
-                    if (exist_flag){
-                        spaceRunJFrame.DisplayOutputSetText("\nCaricamento in corso... \n");
-                        ResultSet rts = st.executeQuery("SELECT * FROM SPACERUN_DB WHERE PartitaID = '"+input+"'");
-                        if (rts.next()) {
-                            Iterator<Room> rm = getRooms().iterator();
-                            while (rm.hasNext()) {
-                                Room next = rm.next();
-                                if (next.getId() == rts.getInt(2)) {
-                                    setCurrentRoom(next);
-                                    spaceRunJFrame.DisplayOutputSetText("Ora ti trovi in: " + toUpperCase(getCurrentRoom().getName()));
-                                    spaceRunJFrame.DisplayOutputSetText("\n==================================================================\n");
-                                    spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getDescription() + "\n");
-                                }
+                    Pattern alfabeto = Pattern.compile("^([a-zA-Z0-9]{2,15})$");
+                    String input = spaceRunJFrame.SaveDialog();	
+                    Matcher matcher = alfabeto.matcher(input);
+                    if(matcher.matches()){
+                        spaceRunJFrame.DisplayOutputSetText("\nCaricamento partita:" + input);          
+                        ResultSet rs = st.executeQuery("SELECT PartitaID FROM SPACERUN_DB"); 
+                        while (rs.next()){
+                            String partita = rs.getString(1);
+                            if (partita.equals(input)){
+                                exist_flag = true;
                             }
-                            if (rts.getString(3) != null) {
-                                objInventory = rts.getString(3).split("#");
-                                Iterator<Room> roomIt = getRooms().iterator();
-                                while (roomIt.hasNext()) {
-                                    Room nextRoom = roomIt.next();
-                                    Iterator<AdvObject> objectIt = nextRoom.getObjects().iterator();
-                                    while (objectIt.hasNext()) {
-                                        AdvObject nextObject = objectIt.next();
-
+                        }
+                        if (exist_flag){
+                            spaceRunJFrame.DisplayOutputSetText("\nCaricamento in corso... \n");
+                            ResultSet rts = st.executeQuery("SELECT * FROM SPACERUN_DB WHERE PartitaID = '"+input+"'");
+                            if (rts.next()) {
+                                Iterator<Room> rm = getRooms().iterator();
+                                while (rm.hasNext()) {
+                                    Room next = rm.next();
+                                    if (next.getId() == rts.getInt(2)) {
+                                        setCurrentRoom(next);
+                                        spaceRunJFrame.DisplayOutputSetText("Ora ti trovi in: " + toUpperCase(getCurrentRoom().getName()));
+                                        spaceRunJFrame.DisplayOutputSetText("\n==================================================================\n");
+                                        spaceRunJFrame.DisplayOutputSetText(getCurrentRoom().getDescription() + "\n");
+                                    }  
+                                }
+                                if (rts.getString(3) != null) {
+                                    objInventory = rts.getString(3).split("#");                           
+                                    Iterator<AdvObject> invIt = getInventory().iterator();
+                                    List<AdvObject> toRemove =new ArrayList<>();
+                                    boolean rimuovi = false;
+                                    while (invIt.hasNext()) {
+                                        AdvObject next = invIt.next();  
+                                        rimuovi = false;
                                         for (i = 0; objInventory.length - 1 >= i; i++) {
-
-                                            if (Integer.parseInt(objInventory[i]) == nextObject.getId()) {
-                                                getInventory().add(nextObject);
-                                                objectIt.remove();
-                                            }
-
+                                            if (next.getId() == Integer.parseInt(objInventory[i])) {
+                                                rimuovi = true;
+                                            } 
                                         }
+                                        if(rimuovi == false){
+                                           toRemove.add(next); 
+                                        }                                       
+                                    }
+                                    getInventory().removeAll(toRemove);                           
+                                    Iterator<Room> roomIt = getRooms().iterator();
+                                    while (roomIt.hasNext()) {
+                                        Room nextRoom = roomIt.next();
+                                        Iterator<AdvObject> objectIt = nextRoom.getObjects().iterator();
+                                        while (objectIt.hasNext()) {
+                                            AdvObject nextObject = objectIt.next();
+                                            for (i = 0; objInventory.length - 1 >= i; i++) {
+                                                if (Integer.parseInt(objInventory[i]) == nextObject.getId()) {
+                                                    getInventory().add(nextObject);
+                                                    objectIt.remove();
+                                                }
+                                            }                                          
+                                            if (nextObject instanceof AdvObjectContainer) {
+                                                AdvObjectContainer nextObjectContainer = (AdvObjectContainer) nextObject;
+                                                if (!nextObjectContainer.getList().isEmpty()) {
+                                                    Iterator<AdvObject> containerIt = nextObjectContainer.getList().iterator();
+                                                    while (containerIt.hasNext()) {
+                                                        AdvObject nextObjContained = containerIt.next();                                                    
 
-                                        if (nextObject instanceof AdvObjectContainer) {
-                                            AdvObjectContainer nextObjectContainer = (AdvObjectContainer) nextObject;
-
-                                            if (!nextObjectContainer.getList().isEmpty()) {
-                                                Iterator<AdvObject> containerIt = nextObjectContainer.getList().iterator();
-                                                while (containerIt.hasNext()) {
-                                                    AdvObject nextObjContained = containerIt.next();
-
-                                                    for (i = 0; objInventory.length - 1 >= i; i++) {
-
-                                                        if (nextObjContained.getId() == Integer.parseInt(objInventory[i])) {
-                                                            getInventory().add(nextObjContained);
-                                                            containerIt.remove();
+                                                        for (i = 0; objInventory.length - 1 >= i; i++) {
+                                                            if (nextObjContained.getId() == Integer.parseInt(objInventory[i])) {
+                                                                getInventory().add(nextObjContained);
+                                                                containerIt.remove();
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -826,24 +842,61 @@ public class SpaceRun extends GameDescription {
                                         }
                                     }
                                 }
+                                Iterator<AdvObject> objInv = getInventory().iterator();
+                                while (objInv.hasNext()) {
+                                    AdvObject obj1 = objInv.next();
+                                    if(obj1.getId() == 11){
+                                        Iterator<Room> roomIt = getRooms().iterator();
+                                        while (roomIt.hasNext()) {
+                                            Room nextRoom = roomIt.next();
+                                            if(nextRoom.getId() == 7) {
+                                                Iterator<AdvObject> objIt = nextRoom.getObjects().iterator();
+                                                while (objIt.hasNext()) {
+                                                    AdvObject nextObj = objIt.next();
+                                                    nextObj.setUsable(true);
+                                                }
+                                            }
+                                            nextRoom.setLocked(false);
+                                            if(nextRoom.getId() == 11){
+                                                nextRoom.setLocked(true);
+                                            }    
+                                        }
+                                    }
+                                }
+                                if(getCurrentRoom().getId() == 11 || getCurrentRoom().getId() == 12){
+                                    Iterator<Room> roomIt = getRooms().iterator();
+                                    while (roomIt.hasNext()) {
+                                        Room nextRoom = roomIt.next();
+                                        if(nextRoom.getId() == 11) {
+                                            nextRoom.setLocked(false);
+                                        } else if(nextRoom.getId() == 12){
+                                            nextRoom.setLocked(false);
+                                        }    
+                                    }
+                                }    
+                                spaceRunJFrame.InventoryOutputSetText("      Zainetto");
+                                spaceRunJFrame.InventoryOutputAppend("\n-------------------\n");
+                                Iterator<AdvObject> it = getInventory().iterator();
+                                while (it.hasNext()) {
+                                    AdvObject nextObj = it.next();
+                                    spaceRunJFrame.InventoryOutputAppend("\n-" + nextObj.getName());
+                                }
+                                spaceRunJFrame.InventoryOutputAppend("\n");
                             }
-                            // spaceRunJFrame.InventoryOutputSetText("\t\t Zainetto");
-                            //spaceRunJFrame.InventoryOutputAppend("\n--------------------------");
-                            Iterator<AdvObject> it = getInventory().iterator();
-                            while (it.hasNext()) {
-                                AdvObject nextObj = it.next();
-                                spaceRunJFrame.InventoryOutputAppend("\n- " + nextObj.getName());
-                            }
+                            rs.close();
+                            rts.close();
+                            st.close();    
+                        } else {
+                             spaceRunJFrame.DisplayOutputSetText("\nCodice inesistente: caricamento non riuscito.");
                         }
-                        rs.close();
-                        rts.close();
-                        st.close();    
                     } else {
-                         spaceRunJFrame.DisplayOutputSetText("\nCodice inesistente: caricamento non riuscito.");
-                    }    
-                }catch (SQLException ex) {
+                         spaceRunJFrame.DisplayOutputSetText("\nNome non accettato. Reinserire ID caricamento.\n");
+                    }
+                } catch (SQLException ex) {
                    spaceRunJFrame.DisplayOutputSetText(ex.getSQLState() + ": " + ex.getMessage());
-                   spaceRunJFrame.DisplayOutputSetText("\nCaricamento non riuscito");
+                   spaceRunJFrame.DisplayOutputSetText("\nCaricamento non riuscito\n");
+                } catch (Exception ex) {
+                    Logger.getLogger(SpaceRun.class.getName()).log(Level.SEVERE, null, ex);
                 }
         } else if (p.getCommand().getType() == CommandType.END) {
                 String message = differentEnd(command);
@@ -928,22 +981,3 @@ public class SpaceRun extends GameDescription {
         return message;
     }
 }
-
-
-
-   /* private void NewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewMenuItemActionPerformed
-        if (!saved && !game.isEnd()) {
-            int option = JOptionPane.showConfirmDialog(null, "Ci sono modifiche non salvate. Sicuro di voler cominciare una nuova partita?", "Nuova partita", JOptionPane.YES_NO_CANCEL_OPTION);
-            if (option == JOptionPane.YES_OPTION) {
-                init();
-                saved = true;
-            } else if (option == JOptionPane.NO_OPTION) {
-                saveFile();
-            } else if (option == JOptionPane.CANCEL_OPTION) {
-                return;
-            }
-        } else {
-            init();
-            saved = true;
-        }
-    }*/
