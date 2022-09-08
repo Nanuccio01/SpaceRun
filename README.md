@@ -17,23 +17,80 @@ Il resto è tutto presente nel gioco, cosa aspettate??
 
 ## Tecniche utilizzate: 
 - Programmazione ad oggetti
+- Stringhe e Regex: per output ben formattati e controlli sull'input.
 - File: utilizzati per l’inizializzazione delle stanze, degli oggetti e dei rispettivi parametri; Utili per implementare facilmente altre avventure tesuali e per facilitare la futura manutenzione di esse.
 - Thread: utilizzato constantemente dall'avvio alla fine dell'esecuzione, per mantenere costantemente aggiornato l'orario attuale, utile al giocatore.
 - Swing: per costruire l’interfaccia grafica dell’applicazione precedentemente e abbondantemente descritta.
-- Rest/Servlet:
+- Rest: 
 - Collection: 
     - Arraylist per organizzare i dati delle stanze, degli oggetti, dell'inventario e dei comandi.
     - Iterator per le ricerche negli Arraylist.
     - Tipo enumerativo per classificare i comandi inseribili dell’utente.
     - Set per creare gli alias, semplificando il riferimento ad oggetti, stanze e comandi.
-- Database H2 utilizzato per il salvataggio e il caricamento della partita.
+- Database H2 utilizzato per il salvataggio e il caricamento delle partite.
 - Lambda Expression: 
 
 ## Diagramma delle classi:
 
+     **Classe: ParolaSegreta**
+
+      Metodo: impostazioneParola
+
+  ```mermaid
+    classDiagram
+        class App 
+        App : +main (args)
+        App: +app ()
+    class ParolaSegreta{-parola : String}
+        ParolaSegreta : +mostraParola()
+        ParolaSegreta : +impostazioneParola()
+     ParolaSegreta  "1" <-- "1..*" App : imposta
+  ```
+  Metodo: mostraParola
+
+  ```mermaid
+    classDiagram
+    class App 
+        App : +main (args)
+        App: +app ()
+    class ParolaSegreta{-parola : String}
+        ParolaSegreta : +mostraParola() 
+        ParolaSegreta : +impostazioneParola()
+
+     App  "1" --> "1" ParolaSegreta : mostra
+  ```
+
+
 ## Specifica algebrica:
 
 ## Informazioni aggiuntive sulle problematiche e sulle scelte sviluppative:
+
+## Comandi per finire il gioco in (Speed-Run):
+Attenzione così la fruizione della storia può essere compromessa. 
+
+Seguire questi comandi eliminerebbe passaggi importanti ed Easter-Egg cosparsi per la mappa.
+
+Inizio:
+->Nord
+->Est
+->Sud
+->Apri cassetto
+->Prendi pistola
+->Prendi torcia
+->Nord
+->Ovest
+->Ovest
+->Nord
+->Usa torcia
+->Fruga nelle divise
+->Prendi tessera
+->Nord
+->Spara all'alieno
+->Est
+->Nord
+->Spingi bottone rosso
+->10403
+-> Fine.
 
 ## Autori e sviluppatori del gioco:
 -	Gaetano Schiralli

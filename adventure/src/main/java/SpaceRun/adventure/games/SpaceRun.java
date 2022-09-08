@@ -13,6 +13,8 @@ import SpaceRun.adventure.type.AdvObjectContainer;
 import SpaceRun.adventure.type.Command;
 import SpaceRun.adventure.type.CommandType;
 import SpaceRun.adventure.type.Room;
+import static SpaceRun.adventure.type.Space.getPersonInSpace;
+import static SpaceRun.adventure.type.Space.getWeatherByCity;
 import static com.sun.tools.javac.util.StringUtils.toUpperCase;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -312,15 +314,17 @@ public class SpaceRun extends GameDescription {
             lineObjects = brObjects.readLine(); //13
             setParam = lineObjects.split("#");
             AdvObject camcorders = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            camcorders.setAlias(new String[]{"videocamere"});
+            camcorders.setAlias(new String[]{"videocamere", "videocamera", "telecamera"});
             camcorders.setPickupable(false);
+            camcorders.setUsable(true);
             controlCabin.getObjects().add(camcorders);
             
             lineObjects = brObjects.readLine(); //14
             setParam = lineObjects.split("#");
             AdvObject videoClips = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
-            videoClips.setAlias(new String[]{"registrazioni", "video"});
+            videoClips.setAlias(new String[]{"registrazioni", "video", "filmato"});
             videoClips.setPickupable(false);
+            videoClips.setUsable(true);
             controlCabin.getObjects().add(videoClips);
             
             lineObjects = brObjects.readLine(); //15
@@ -346,6 +350,14 @@ public class SpaceRun extends GameDescription {
             alien.setUsable(true);
             controlRoom.getObjects().add(alien); 
             observatory.getObjects().add(alien); 
+            
+            lineObjects = brObjects.readLine(); //18
+            setParam = lineObjects.split("#");
+            AdvObject telescope = new AdvObject(Integer.parseInt(setParam[0]), setParam[1], setParam[2]);
+            telescope.setAlias(new String[]{"cannocchiale", "binocolo"});
+            telescope.setPickupable(false);
+            telescope.setUsable(true);
+            observatory.getObjects().add(telescope);
                        
             //Impostazione stanza iniziale
             setCurrentRoom(incubators);
@@ -363,11 +375,12 @@ public class SpaceRun extends GameDescription {
      * @param command è la stringa comando così come è stato inserito dall'utente.
      */
     @Override
-    public void nextMove(ParserOutput p, SpaceRunJFrame spaceRunJFrame, String command) {
+    public void nextMove(ParserOutput p, SpaceRunJFrame spaceRunJFrame, String command) {      
         if (p.getCommand() == null) {
             spaceRunJFrame.DisplayOutputSetText("Non ho capito cosa devo fare! Prova con un altro comando. \n");
         } else {
             //move
+            boolean card = false;
             boolean noroom = false;
             boolean move = false;
             boolean blocked = false;
@@ -432,17 +445,22 @@ public class SpaceRun extends GameDescription {
                     if (p.getObject().isOpenable() == true && p.getObject().isOpen() == false ) {
                         spaceRunJFrame.DisplayOutputSetText(" L'oggetto è chiuso, aprilo per darci un occhiata da vicino \n");
                     } else {
-                        if (p.getObject().getId() == 15){
-                            Iterator<AdvObject> invIt = getInventory().iterator();
-                            while (invIt.hasNext()) {
-                                AdvObject next = invIt.next();
-                                if (next.getId() == 11){
-                                    spaceRunJFrame.MapDialog();
-                                    spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription() + "\n");
+                        if (p.getObject().getId() == 13 || p.getObject().getId() == 14 || p.getObject().getId() == 15){
+                            if(card == false){
+                                Iterator<AdvObject> invIt = getInventory().iterator();
+                                while (invIt.hasNext()) {
+                                    AdvObject next = invIt.next();
+                                    if (next.getId() == 11){
+                                        card = true;    
+                                    }
                                 }
                             }
-                        } else if ((p.getObject().getId() == 13 || p.getObject().getId() == 14 || p.getObject().getId() == 15) && p.getObject().isUsable() == false){
-                            spaceRunJFrame.DisplayOutputSetText("Non hai i requisiti necessari per fare ciò. Se insisti si attiverà l’allarme di sicurezza. \n");
+                        }
+                        if (p.getObject().getId() == 15 && card == true){                                                           
+                            spaceRunJFrame.MapDialog();
+                            spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription() + "\n");      
+                        } else if ((p.getObject().getId() == 13 || p.getObject().getId() == 14 || p.getObject().getId() == 15) && card == false){
+                            spaceRunJFrame.DisplayOutputSetText("Non hai i requisiti necessari per fare ciò. \n");
                         } else {
                             spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription() + "\n");
                         }
@@ -590,93 +608,129 @@ public class SpaceRun extends GameDescription {
                 }
             } else if (p.getCommand().getType() == CommandType.USE) {
                 //ricerca oggetti usabili
-                if (p.getObject() != null && p.getObject().isUsable()) {
-                    if(p.getObject().isUsed() == false){
-                        if (p.getObject().getId() == 17){
-                        } else if (p.getObject().getId() == 13 || p.getObject().getId() == 14) {
-                            spaceRunJFrame.DisplayOutputSetText(p.getObject().getDescription() + "\n"); 
-                        } else {
-                            spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getObject().getName() + "\n");
-                        }
-                        p.getObject().setUsed(true);
-                        if(p.getObject().getId() == 16) {
-                            p.getObject().setUsed(false);
-                            spaceRunJFrame.DisplayOutputSetText("Troppo bello per essere vero, serve una password numerica da inserire. "
-                                + "Se sei arrivato in questo punto, sicuramente la possiedi già. "
-                                + "Magari potrebbe servire per identificare chi è al comando della navicella... \n");
-                            String psw = spaceRunJFrame.PasswordDialog(); 
-                            if("10403".equals(psw)){
-                                spaceRunJFrame.DisplayOutputSetText(psw + " -> Identificazione riuscita, navicella pronta in decollo! \n\n");
-                                String message = end();
-                                spaceRunJFrame.DisplayOutputSetText(message);
-                                spaceRunJFrame.ExitDialog();
-                            } else {
-                               spaceRunJFrame.DisplayOutputSetText("Codice identificativo non riconosciuto, riprovare! \n");
-                            }
-                        } else if (p.getObject().getId() == 17) {
-                            boolean gun = false;
-                            Iterator<AdvObject> invIt = getInventory().iterator();
-                            while (invIt.hasNext()) {
-                                AdvObject next = invIt.next();
-                                if (next.getId() == 5){
-                                    gun = true;
-                                }
-                            }
-                            p.getObject().setUsed(false);
-                            if (getCurrentRoom().getId() == 10 && gun == true){
-                                getCurrentRoom().getEast().setLocked(false);
-                                spaceRunJFrame.DisplayOutputSetText("Dalla paura spari. "
-                                        + "Il primo colpo gli annienta solo un piede. L’alieno si rialza e si fionda con un salto verso di te in volo. "
-                                        + "Tu chiudi gli occhi pensando sei spacciato e BAANGG!!! \nSenza manco accorgetene pianti un colpo laser dritto nelle cervella di questo essere."
-                                        + " L’autostima ti sale leggermente, ti senti un eroe per ora. Un eroe cosparso di sangue violaceo… Meglio continuare.  \n");
-                            } else if (getCurrentRoom().getId() == 2 && gun == true){
-                                spaceRunJFrame.DisplayOutputSetText("Gli alieni sono troppi, come ti è saltato in mente di imitare Rambo. Muori in una sparatoria epica.  \n");
-                                spaceRunJFrame.DisplayOutputSetText("\nAddio!");
-                                spaceRunJFrame.ExitDialog(); 
-                                spaceRunJFrame.enableElements(false);
-                            } else {
-                                spaceRunJFrame.DisplayOutputSetText("Non possiedi niente per uccidere l'alieno.  \n");
-                            }
-                        }
-                    } else {
-                        spaceRunJFrame.DisplayOutputSetText("Oggetto già in uso.");
-                    }
-                } else if (p.getInvObject() != null && p.getInvObject().isUsable()) {
-                    if(p.getInvObject().isUsed() == false){
-                        spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getInvObject().getName() + "\n");                     
-                        p.getInvObject().setUsed(true);
-                        if(p.getInvObject().getId() == 6) {
-                            spaceRunJFrame.DisplayOutputSetText("Adesso puoi vedere le stanze, attento però, potresti illuminare la faccia di qualche guardia! \n");
-                            Iterator<Room> roomIt = getRooms().iterator();
-                            while (roomIt.hasNext()) {
-                                Room nextRoom = roomIt.next();
-                                nextRoom.setVisible(true);
-                            }
-                        } else if (p.getInvObject().getId() == 5) {
-                            p.getInvObject().setUsed(false);
-                            if (getCurrentRoom().getId() == 10){
-                                getCurrentRoom().getEast().setLocked(false);
-                                spaceRunJFrame.DisplayOutputSetText("Dalla paura spari. "
-                                        + "Il primo colpo gli annienta solo un piede. L’alieno si rialza e si fionda con un salto verso di te in volo. "
-                                        + "Tu chiudi gli occhi pensando sei spacciato e BAANGG!!! \nSenza manco accorgetene pianti un colpo laser dritto nelle cervella di questo essere."
-                                        + " L’autostima ti sale leggermente, ti senti un eroe per ora. Un eroe cosparso di sangue violaceo… Meglio continuare.  \n");
-                            } else if (getCurrentRoom().getId() == 2){
-                                spaceRunJFrame.DisplayOutputSetText("Gli alieni sono troppi, come ti è saltato in mente di imitare Rambo. Muori in una sparatoria epica.  \n");
-                                spaceRunJFrame.DisplayOutputSetText("\nAddio!");
-                                spaceRunJFrame.ExitDialog(); 
-                                spaceRunJFrame.enableElements(false);
-                            }     
-                        }
-                    } else {
-                        spaceRunJFrame.DisplayOutputSetText("Oggetto già in uso. \n");
-                    } 
+                if (p.getObject() == null && p.getInvObject() == null) {
+                    spaceRunJFrame.DisplayOutputSetText("Non c'è niente da usare qui.");
                 } else {
-                    if ((p.getObject().getId() == 13 || p.getObject().getId() == 14 || p.getObject().getId() == 15) && p.getObject().isUsable() == false){
-                        spaceRunJFrame.DisplayOutputSetText("Non hai i requisiti necessari per fare ciò. Se insisti si attiverà l’allarme di sicurezza. \n");
+                    if (p.getObject() != null && p.getObject().isUsable()) {
+                        if(p.getObject().isUsed() == false){
+                            if (p.getObject().getId() == 17){ 
+                                p.getObject().setUsed(true);
+                            } else if (p.getObject().getId() == 13 || p.getObject().getId() == 14) {
+                                if(card == false){
+                                    Iterator<AdvObject> invIt = getInventory().iterator();
+                                    while (invIt.hasNext()) {
+                                        AdvObject next = invIt.next();
+                                        if (next.getId() == 11){
+                                            card = true;    
+                                        }
+                                    }
+                                }
+                                if( card == true && p.getObject().getId() == 13){
+                                    p.getObject().setUsed(true);
+                                   spaceRunJFrame.DisplayOutputSetText("Telecamere spente. D'ora in poi nessuno sapra' piu' dove sei. \n");
+                                } else if( card == true && p.getObject().getId() == 14){
+                                    p.getObject().setUsed(true);
+                                    spaceRunJFrame.DisplayOutputSetText("File eliminati! Ora nessuno capira' come e quando sei fuggito, sarai un fantasma. Un fantasma ricercato... \n");
+                                } else {
+                                    p.getObject().setUsed(false);
+                                    spaceRunJFrame.DisplayOutputSetText("Non hai i requisiti necessari per fare ciò. Se insisti si attiverà l’allarme di sicurezza. \n"); 
+                                }
+                            } else {
+                                spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getObject().getName() + "\n");
+                                p.getObject().setUsed(true);
+                            }
+                            if(p.getObject().getId() == 16) {
+                                p.getObject().setUsed(false);
+                                spaceRunJFrame.DisplayOutputSetText("Troppo bello per essere vero, serve una password numerica da inserire. "
+                                    + "Se sei arrivato in questo punto, sicuramente la possiedi già. "
+                                    + "Magari potrebbe servire per identificare chi è al comando della navicella... \n");
+                                String psw = spaceRunJFrame.PasswordDialog(); 
+                                if("10403".equals(psw)){
+                                    spaceRunJFrame.DisplayOutputSetText(psw + " -> Identificazione riuscita, navicella pronta in decollo! \n\n");
+                                    String message = end();
+                                    spaceRunJFrame.DisplayOutputSetText(message);
+                                    spaceRunJFrame.ExitDialog();
+                                } else {
+                                   spaceRunJFrame.DisplayOutputSetText("Codice identificativo non riconosciuto, riprovare! \n");
+                                }
+                            } else if (p.getObject().getId() == 17) {
+                                boolean gun = false;
+                                Iterator<AdvObject> invIt = getInventory().iterator();
+                                while (invIt.hasNext()) {
+                                    AdvObject next = invIt.next();
+                                    if (next.getId() == 5){
+                                        gun = true;
+                                    }
+                                }
+                                if (getCurrentRoom().getId() == 10 && gun == true){
+                                    getCurrentRoom().getEast().setLocked(false);
+                                    spaceRunJFrame.DisplayOutputSetText("Dalla paura spari. "
+                                            + "Il primo colpo gli annienta solo un piede. L’alieno si rialza e si fionda con un salto verso di te in volo. "
+                                            + "Tu chiudi gli occhi pensando sei spacciato e BAANGG!!! \nSenza manco accorgetene pianti un colpo laser dritto nelle cervella di questo essere."
+                                            + " L’autostima ti sale leggermente, ti senti un eroe per ora. Un eroe cosparso di sangue violaceo… Meglio continuare.  \n");
+                                } else if (getCurrentRoom().getId() == 2 && gun == true){
+                                    spaceRunJFrame.DisplayOutputSetText("Gli alieni sono troppi, come ti è saltato in mente di imitare Rambo. Muori in una sparatoria epica.  \n");
+                                    spaceRunJFrame.DisplayOutputSetText("\nAddio!");
+                                    spaceRunJFrame.ExitDialog(); 
+                                    spaceRunJFrame.enableElements(false);
+                                } else {
+                                    spaceRunJFrame.DisplayOutputSetText("Non possiedi niente per uccidere l'alieno.  \n");
+                                }
+                            }  else if (p.getObject().getId() == 18){
+                                p.getObject().setUsed(false);
+                                spaceRunJFrame.DisplayOutputSetText("Finalmente puoi vedere come se la passano gli amici terrestri, quanta nostalgia... \n");
+                                String city = spaceRunJFrame.WeatherDialog();
+                                city = city.substring(0,1).toUpperCase() + city.substring(1,city.length()).toLowerCase();
+                                String space = getPersonInSpace();
+                                spaceRunJFrame.DisplayOutputSetText("\nNella città di "+city+" noti "+getWeatherByCity(city)+".\n");  
+                                spaceRunJFrame.DisplayOutputSetText("Inoltre noti, tramite il radar del telescopio, che nello spazio ci sono "+space+" terrestri in orbita. "
+                                        + "Forse dopo riuscirai a raggiungerli... non scoraggiarti! \n");
+                            }   
+                        } else {
+                            if (p.getObject().getId() == 17){
+                                spaceRunJFrame.DisplayOutputSetText("Alieno già morto stecchito.\n");
+                            } else {
+                                spaceRunJFrame.DisplayOutputSetText("Oggetto già utilizzato. \n");
+                            }
+                        }
+                    } else if (p.getInvObject() != null && p.getInvObject().isUsable()) {
+                        if(p.getInvObject().isUsed() == false){
+                            spaceRunJFrame.DisplayOutputSetText("Hai usato: " + p.getInvObject().getName() + "\n");                     
+                            p.getInvObject().setUsed(true);
+                            if(p.getInvObject().getId() == 6) {
+                                spaceRunJFrame.DisplayOutputSetText("Adesso puoi vedere le stanze, attento però, potresti illuminare la faccia di qualche guardia! \n");
+                                Iterator<Room> roomIt = getRooms().iterator();
+                                while (roomIt.hasNext()) {
+                                    Room nextRoom = roomIt.next();
+                                    nextRoom.setVisible(true);
+                                }
+                            } else if (p.getInvObject().getId() == 5) {
+                                if (getCurrentRoom().getId() == 10){
+                                    p.getInvObject().setUsed(true);
+                                    getCurrentRoom().getEast().setLocked(false);
+                                    spaceRunJFrame.DisplayOutputSetText("Dalla paura spari. "
+                                            + "Il primo colpo gli annienta solo un piede. L’alieno si rialza e si fionda con un salto verso di te in volo. "
+                                            + "Tu chiudi gli occhi pensando sei spacciato e BAANGG!!! \nSenza manco accorgetene pianti un colpo laser dritto nelle cervella di questo essere."
+                                            + " L’autostima ti sale leggermente, ti senti un eroe per ora. Un eroe cosparso di sangue violaceo… Meglio continuare.  \n");
+                                } else if (getCurrentRoom().getId() == 2){
+                                    p.getInvObject().setUsed(false);
+                                    spaceRunJFrame.DisplayOutputSetText("Gli alieni sono troppi, come ti è saltato in mente di imitare Rambo. Muori in una sparatoria epica.  \n");
+                                    spaceRunJFrame.DisplayOutputSetText("\nAddio!");
+                                    spaceRunJFrame.ExitDialog(); 
+                                    spaceRunJFrame.enableElements(false);
+                                }     
+                            }
+                        } else {
+                            if (p.getInvObject().getId() == 5) {
+                                spaceRunJFrame.DisplayOutputSetText("Hai già sparato all'alieno guardia. \n");
+                            } else {
+                                spaceRunJFrame.DisplayOutputSetText("Oggetto già utilizzato. \n");                               
+                            }
+                        } 
                     } else {
-                        spaceRunJFrame.DisplayOutputSetText("Non puoi usare questo oggetto. \n");
+                            spaceRunJFrame.DisplayOutputSetText("Non puoi usare questo oggetto. \n");     
                     }
-                }    
+                }
             } else if (p.getCommand().getType() == CommandType.SAVE) {
                  try {
                     boolean flag_next = false;  //flag per l'esistenza del next
@@ -867,12 +921,26 @@ public class SpaceRun extends GameDescription {
                                     Iterator<Room> roomIt = getRooms().iterator();
                                     while (roomIt.hasNext()) {
                                         Room nextRoom = roomIt.next();
+                                        Iterator<AdvObject> objectIt = nextRoom.getObjects().iterator();
+                                        while (objectIt.hasNext()) {
+                                            AdvObject nextObject = objectIt.next();
+                                            if(nextObject.getId() == 17) {
+                                            nextObject.setUsed(true);
+                                            }
+                                        }
                                         if(nextRoom.getId() == 11) {
                                             nextRoom.setLocked(false);
                                         } else if(nextRoom.getId() == 12){
                                             nextRoom.setLocked(false);
                                         }    
                                     }
+                                    Iterator<AdvObject> invIt = getInventory().iterator();
+                                    while (invIt.hasNext()) {
+                                        AdvObject next = invIt.next();
+                                        if (next.getId() == 5){
+                                            next.setUsed(true);
+                                        }
+                                    } 
                                 }    
                                 spaceRunJFrame.InventoryOutputSetText("      Zainetto");
                                 spaceRunJFrame.InventoryOutputAppend("\n-------------------\n");
@@ -885,12 +953,13 @@ public class SpaceRun extends GameDescription {
                             }
                             rs.close();
                             rts.close();
-                            st.close();    
+                            st.close();
+                            spaceRunJFrame.enableElements(true);
                         } else {
-                             spaceRunJFrame.DisplayOutputSetText("\nCodice inesistente: caricamento non riuscito.");
+                            spaceRunJFrame.DisplayOutputSetText("\nCodice inesistente: caricamento non riuscito.");
                         }
                     } else {
-                         spaceRunJFrame.DisplayOutputSetText("\nNome non accettato. Reinserire ID caricamento.\n");
+                        spaceRunJFrame.DisplayOutputSetText("\nNome non accettato. Reinserire ID caricamento.\n");
                     }
                 } catch (SQLException ex) {
                    spaceRunJFrame.DisplayOutputSetText(ex.getSQLState() + ": " + ex.getMessage());

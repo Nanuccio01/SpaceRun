@@ -8,12 +8,12 @@ package SpaceRun.adventure.gui;
  * 
  * @author Gaetano Schiralli, Dafne Spaccavento
  */
-public class SaveJDialog extends javax.swing.JDialog {
+public class SaveLoadJDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form SaveJDialog
      */
-    public SaveJDialog(java.awt.Frame parent, boolean modal) {
+    public SaveLoadJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -27,35 +27,35 @@ public class SaveJDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        jEnterButton = new javax.swing.JButton();
+        jSaveTextField = new javax.swing.JTextField();
+        jIDLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jButton1.setBackground(new java.awt.Color(0, 0, 0));
-        jButton1.setFont(new java.awt.Font("OCR A Extended", 1, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(51, 255, 0));
-        jButton1.setText("INVIO");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jEnterButton.setBackground(new java.awt.Color(0, 0, 0));
+        jEnterButton.setFont(new java.awt.Font("OCR A Extended", 1, 12)); // NOI18N
+        jEnterButton.setForeground(new java.awt.Color(51, 255, 0));
+        jEnterButton.setText("INVIO");
+        jEnterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jEnterButtonActionPerformed(evt);
             }
         });
 
-        jTextField1.setBackground(new java.awt.Color(0, 0, 0));
-        jTextField1.setFont(new java.awt.Font("OCR A Extended", 1, 12)); // NOI18N
-        jTextField1.setForeground(new java.awt.Color(51, 255, 0));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        jSaveTextField.setBackground(new java.awt.Color(0, 0, 0));
+        jSaveTextField.setFont(new java.awt.Font("OCR A Extended", 1, 12)); // NOI18N
+        jSaveTextField.setForeground(new java.awt.Color(51, 255, 0));
+        jSaveTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                jSaveTextFieldActionPerformed(evt);
             }
         });
 
-        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel1.setFont(new java.awt.Font("OCR A Extended", 1, 12)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Digita l'ID della partita per proseguire:");
+        jIDLabel.setBackground(new java.awt.Color(0, 0, 0));
+        jIDLabel.setFont(new java.awt.Font("OCR A Extended", 1, 12)); // NOI18N
+        jIDLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jIDLabel.setText("Digita l'ID della partita per proseguire:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -65,34 +65,34 @@ public class SaveJDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1)
+                        .addComponent(jSaveTextField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jEnterButton))
+                    .addComponent(jIDLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jIDLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jSaveTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jEnterButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void jSaveTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSaveTextFieldActionPerformed
         dispose();
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_jSaveTextFieldActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jEnterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jEnterButtonActionPerformed
         dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jEnterButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -111,20 +111,21 @@ public class SaveJDialog extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SaveJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SaveLoadJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SaveJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SaveLoadJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SaveJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SaveLoadJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SaveJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SaveLoadJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                SaveJDialog dialog = new SaveJDialog(new javax.swing.JFrame(), true);
+                SaveLoadJDialog dialog = new SaveLoadJDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -137,13 +138,13 @@ public class SaveJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton jEnterButton;
+    private javax.swing.JLabel jIDLabel;
+    private javax.swing.JTextField jSaveTextField;
     // End of variables declaration//GEN-END:variables
 
     public String SavDialog() {
-        String save = jTextField1.getText();
+        String save = jSaveTextField.getText();
         return save;     
     }
 }

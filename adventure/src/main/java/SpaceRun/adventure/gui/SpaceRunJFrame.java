@@ -34,7 +34,8 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
     private final ExitJDialog exitDialog  = new ExitJDialog(this, true);
     private final PasswordJDialog passwordDialog  = new PasswordJDialog(this, true);
     private final MapJDialog mapDialog  = new MapJDialog(this, false);
-    private final SaveJDialog saveDialog  = new SaveJDialog(this, true);
+    private final SaveLoadJDialog saveDialog  = new SaveLoadJDialog(this, true);
+    private final WeatherJDialog weatherDialog  = new WeatherJDialog(this, true);
     private final GameDescription game;
     private final Parser parser;
     
@@ -488,5 +489,11 @@ public class SpaceRunJFrame extends javax.swing.JFrame implements Runnable{
         saveDialog.setVisible(true);
         String saving = saveDialog.SavDialog();
         return saving;     
+    }
+    
+    public String WeatherDialog() {
+        weatherDialog.setVisible(true);
+        String weather = weatherDialog.WeatDialog();
+        return weather;     
     }
 }
