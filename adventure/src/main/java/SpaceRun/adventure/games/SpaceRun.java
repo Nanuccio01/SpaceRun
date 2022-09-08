@@ -550,7 +550,7 @@ public class SpaceRun extends GameDescription {
                                     Iterator<AdvObject> it = c.getList().iterator();
                                     while (it.hasNext()) {
                                         AdvObject next = it.next();
-                                        getCurrentRoom().getObjects().add(next);
+
                                         spaceRunJFrame.DisplayOutputSetText(next.getName() + " | " );
                                         it.remove();
                                     }

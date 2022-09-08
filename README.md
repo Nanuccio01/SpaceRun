@@ -5,7 +5,7 @@ SpaceRun è un avventura testuale con ambientazione horror fantascientifica, il 
 
 Attraverso la struttura della navicella è stato volutamente spinto l'utente a farsi assalire da un senso di curiosità in modo che tutte le stanze alla fine del gioco risultassero ben osservate, dando anche la possibilità però, di effettuare una speed-run per gli user che più si immergono nella corsa per la salvezza, non badando ad extra.
 
-Il linguaggio è più descrittivo possibile in modo da sostituire la parte visiva non presente, con la creazione di mondi nella propria immaginazione. I vari messaggi per ogni azione compiuta sono a tratti ironici in un certo senso, per far si di non cadere mai nel noioso/frustante ed infine non c'è la presenza musica e o immagini ad eccezione della mappa reale del gioco disegnata ad-hoc, sbloccabile in una delle sezioni intermedie della storia.
+Il linguaggio è più descrittivo possibile in modo da sostituire la parte visiva non presente, con la creazione di mondi nella propria immaginazione. I vari messaggi per ogni azione compiuta sono a tratti ironici in un certo senso, per far si di non cadere mai nel noioso/frustante ed infine non c'è la presenza di musica e o immagini ad eccezione della mappa reale del gioco disegnata ad-hoc, sbloccabile in una delle sezioni intermedie della storia.
 
 Il gameplay con l'aiuto dell'interfaccia grafica risulta essere molto semplice ed intuitivo. Tramite appositi bottoni ben predisposti sullo schermo, l’utente può effettuare quasi tutte le azioni principali, che sono: le direzioni, indicate tramite i tasti dei punti cardinali (Nord, Sud, Ovest, Est), il tasto osserva per avere maggiori descrizioni legate alle stanze, il tasto invio per eseguire altre azioni scritte nell'apposita sezione, ed i tasti di salvataggio e caricamento partita.
 
@@ -19,15 +19,15 @@ Il resto è tutto presente nel gioco, cosa aspettate??
 - Programmazione ad oggetti
 - Stringhe e Regex: per output ben formattati e controlli sull'input.
 - File: utilizzati per l’inizializzazione delle stanze, degli oggetti e dei rispettivi parametri; Utili per implementare facilmente altre avventure tesuali e per facilitare la futura manutenzione di esse.
-- Thread: utilizzato constantemente dall'avvio alla fine dell'esecuzione, per mantenere costantemente aggiornato l'orario attuale, utile al giocatore.
+- Thread: utilizzato constantemente dall'avvio alla fine dell'esecuzione, per mantenere costantemente aggiornato l'orario attuale, utile al giocatore per proseguire.
 - Swing: per costruire l’interfaccia grafica dell’applicazione precedentemente e abbondantemente descritta.
-- Rest: 
+- Rest: utilizzate per avere informazioni riguardo il meteo di una specifica città inseritta in input, e per avere il numero degli umani in orbita terrestre aggiornato al momento della richiesta.
 - Collection: 
     - Arraylist per organizzare i dati delle stanze, degli oggetti, dell'inventario e dei comandi.
     - Iterator per le ricerche negli Arraylist.
     - Tipo enumerativo per classificare i comandi inseribili dell’utente.
     - Set per creare gli alias, semplificando il riferimento ad oggetti, stanze e comandi.
-- Database H2 utilizzato per il salvataggio e il caricamento delle partite.
+- H2 Database Engine, utilizzato per il salvataggio e il caricamento delle partite.
 - Lambda Expression: 
 
 ## Diagramma delle classi:
@@ -65,6 +65,10 @@ Il resto è tutto presente nel gioco, cosa aspettate??
 
 ## Informazioni aggiuntive sulle problematiche e sulle scelte sviluppative:
 
+- L'utilizzo del gioco sui diversi sistemi operativi, potrebbe portare ad una diversa visualizzazione dell'interfaccia grafica, cambiando font e dimensione caratteri oltre che la corretta disposizione dei tasti e di altri oggetti grafici.
+
+- È stata volutamente scartata una funzione di rete simil multiplayer per il gioco, in quanto la storia è interamente costruita intorno alla soggettività delle scelte e alla solitudine del personaggio. Non è esclusa una futura implementazione.
+ 
 ## Comandi per finire il gioco in (Speed-Run):
 Attenzione così la fruizione della storia può essere compromessa. 
 
