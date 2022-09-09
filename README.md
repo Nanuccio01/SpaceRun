@@ -32,43 +32,78 @@ Il resto è tutto presente nel gioco, cosa aspettate??
 
 ## Diagramma delle classi:
 
-     **Classe: ParolaSegreta**
-
-      Metodo: impostazioneParola
-
-  ```mermaid
-    classDiagram
-        class App 
-        App : +main (args)
-        App: +app ()
-    class ParolaSegreta{-parola : String}
-        ParolaSegreta : +mostraParola()
-        ParolaSegreta : +impostazioneParola()
-     ParolaSegreta  "1" <-- "1..*" App : imposta
-  ```
-  Metodo: mostraParola
-
-  ```mermaid
-    classDiagram
-    class App 
-        App : +main (args)
-        App: +app ()
-    class ParolaSegreta{-parola : String}
-        ParolaSegreta : +mostraParola() 
-        ParolaSegreta : +impostazioneParola()
-
-     App  "1" --> "1" ParolaSegreta : mostra
-  ```
-
+![](File%20README/UML.PNG)
 
 ## Specifica algebrica:
+Una lista è una sequenza finita, anche vuota, di elementi dello stesso tipo. Indichiamo la lista con la notazione  L = < a1, a2, … , an > n ≥ 0. La lista è dunque una struttura dati dinamica.
+
+**Specifica sintattica:**
+
+● Tipi: lista, posizione, boolean, tipoelem
+
+● Operatori:
+- crealista : ( ) → lista
+- listavuota: (lista) → boolean
+- leggilista : (posizione, lista) → tipoelem
+- scrivilista: (tipoelem,posizione,lista) → lista
+- primolista: (lista) → posizione
+- finelista : (posizione, lista) → boolean
+- succlista : (posizione, lista) → posizione
+- predlista : (posizione, lista) → posizione
+- inslista : (tipoelem,posizione,lista) → lista
+- canclista : (posizione, lista) → lista
+
+**Specifica semantica:**
+
+Tipi:
+- Lista: insieme delle sequenze l = < a1, a2, … , an >, n>=0, di
+elementi di tipo tipoelem dove l'elemento i-esimo ha valore a(i) e
+posizione pos(i)
+- boolean: insieme dei valori di verità
+
+Operatori:
+- crealista = l'
+    - POST: l' = <> (sequenza vuota)
+- listavuota(l) = b
+    - POST: b = true se l = < >, b = false altrimenti
+- leggilista(p, l) = a
+    - PRE: p = pos(i) 1 ≤ i ≤ n
+    - POST: a = a(i)
+- scrivilista(a, p, l) = l'
+   - PRE: p = pos(i) 1 <= i <= n
+   - POST: l' = < a1, a2, … , ai-1, a, ai+1, … , an >
+- primolista(l) = p
+   - POST: p = pos(1)
+- finelista(p, l) = b
+   - PRE: p = pos(i) 1 ≤ i ≤ n+1
+    - POST: b = true se p = pos(n+1)
+b= false altrimenti
+- succlista(p, l) = q
+    - PRE: p = pos(i) 1 ≤ i ≤ n
+    - POST: q = pos(i+1)
+- predlista(p, l) = q
+    - PRE: p = pos(i) 2 ≤ i ≤ n
+    - POST: q = pos(i-1)
+- inslista(a, p, l) = l'
+    - PRE: p = pos(i) 1 ≤ i ≤ n+1
+    - POST: l' = <a1, a2, … , ai-1, a, ai , ai+1, … , an>, se 1 ≤ i ≤ n l' = <a1, a2, … ,an, a> , se i = n+1 (e quindi l' = < a > se i = 1 e l = < >)
+- canclista(p, l) = l'
+    - PRE: p = pos(i) 1 ≤ i ≤ n
+    - POST: l' = <a1, a2, … , ai-1, ai+1, … , an>
+
+Costruttori:
+
+![](File%20README/P_Constructor.PNG)
+
+![](File%20README/L_Constructor.PNG)
+
 
 ## Informazioni aggiuntive sulle problematiche e sulle scelte sviluppative:
 
 - L'utilizzo del gioco sui diversi sistemi operativi, potrebbe portare ad una diversa visualizzazione dell'interfaccia grafica, cambiando font e dimensione caratteri oltre che la corretta disposizione dei tasti e di altri oggetti grafici.
 
 - È stata volutamente scartata una funzione di rete simil multiplayer per il gioco, in quanto la storia è interamente costruita intorno alla soggettività delle scelte e alla solitudine del personaggio. Non è esclusa una futura implementazione.
- 
+
 ## Comandi per finire il gioco in (Speed-Run):
 Attenzione così la fruizione della storia può essere compromessa. 
 
@@ -95,6 +130,9 @@ Inizio:
 ->Spingi bottone rosso
 ->10403
 -> Fine.
+
+## Mappa del gioco:
+![](adventure/resources/Immagini/alien1.jpg)
 
 ## Autori e sviluppatori del gioco:
 -	Gaetano Schiralli
