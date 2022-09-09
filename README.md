@@ -99,6 +99,8 @@ Costruttori:
 
 ## Informazioni aggiuntive sulle problematiche e sulle scelte sviluppative:
 
+- La classe eseguibile contenente il main() per l'avvio del gioco è SpaceRunJFrame.java .
+
 - L'utilizzo del gioco sui diversi sistemi operativi, potrebbe portare ad una diversa visualizzazione dell'interfaccia grafica, cambiando font e dimensione dei caratteri oltre alla corretta disposizione dei tasti e di altri oggetti grafici.
 
 - È stata volutamente scartata una funzione di rete simil multiplayer per il gioco, in quanto la storia è interamente costruita intorno alla soggettività delle scelte e alla solitudine del personaggio. Non è esclusa una futura implementazione.
