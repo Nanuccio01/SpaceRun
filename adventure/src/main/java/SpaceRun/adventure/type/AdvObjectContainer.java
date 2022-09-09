@@ -39,5 +39,4 @@ public class AdvObjectContainer extends AdvObject {
     public void remove(AdvObject o) {
         list.remove(o);
     }
-
 }

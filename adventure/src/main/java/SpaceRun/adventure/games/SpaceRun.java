@@ -30,13 +30,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * La descrizione del gioco è fatta in modo che qualsiasi gioco
- * debba estendere la classe GameDescription. L'Engine è fatto in modo che possa
- * eseguire qualsiasi gioco che estende GameDescription, in questo modo si
- * possono creare più gioci utilizzando lo stesso Engine.
- */
- 
-/**
  * @author Gaetano Schiralli, Dafne Spaccavento
  */
 
@@ -550,7 +543,7 @@ public class SpaceRun extends GameDescription {
                                     Iterator<AdvObject> it = c.getList().iterator();
                                     while (it.hasNext()) {
                                         AdvObject next = it.next();
-
+                                        getCurrentRoom().getObjects().add(next);
                                         spaceRunJFrame.DisplayOutputSetText(next.getName() + " | " );
                                         it.remove();
                                     }
@@ -646,12 +639,12 @@ public class SpaceRun extends GameDescription {
                                     + "Magari potrebbe servire per identificare chi è al comando della navicella... \n");
                                 String psw = spaceRunJFrame.PasswordDialog(); 
                                 if("10403".equals(psw)){
-                                    spaceRunJFrame.DisplayOutputSetText(psw + " -> Identificazione riuscita, navicella pronta in decollo! \n\n");
+                                    spaceRunJFrame.DisplayOutputSetText("\n"+psw + " -> Identificazione riuscita, navicella pronta in decollo! \n\n");
                                     String message = end();
                                     spaceRunJFrame.DisplayOutputSetText(message);
                                     spaceRunJFrame.ExitDialog();
                                 } else {
-                                   spaceRunJFrame.DisplayOutputSetText("Codice identificativo non riconosciuto, riprovare! \n");
+                                   spaceRunJFrame.DisplayOutputSetText("\nCodice identificativo non riconosciuto, riprovare! \n");
                                 }
                             } else if (p.getObject().getId() == 17) {
                                 boolean gun = false;
@@ -659,6 +652,7 @@ public class SpaceRun extends GameDescription {
                                 while (invIt.hasNext()) {
                                     AdvObject next = invIt.next();
                                     if (next.getId() == 5){
+                                        next.setUsed(true);
                                         gun = true;
                                     }
                                 }
@@ -674,6 +668,7 @@ public class SpaceRun extends GameDescription {
                                     spaceRunJFrame.ExitDialog(); 
                                     spaceRunJFrame.enableElements(false);
                                 } else {
+                                    p.getObject().setUsed(false);
                                     spaceRunJFrame.DisplayOutputSetText("Non possiedi niente per uccidere l'alieno.  \n");
                                 }
                             }  else if (p.getObject().getId() == 18){
@@ -707,6 +702,13 @@ public class SpaceRun extends GameDescription {
                             } else if (p.getInvObject().getId() == 5) {
                                 if (getCurrentRoom().getId() == 10){
                                     p.getInvObject().setUsed(true);
+                                    Iterator<AdvObject> objectIt = getCurrentRoom().getObjects().iterator();
+                                        while (objectIt.hasNext()) {
+                                            AdvObject nextObject = objectIt.next();
+                                            if (nextObject.getId() == 17){
+                                                nextObject.setUsed(true);
+                                            }
+                                        }
                                     getCurrentRoom().getEast().setLocked(false);
                                     spaceRunJFrame.DisplayOutputSetText("Dalla paura spari. "
                                             + "Il primo colpo gli annienta solo un piede. L’alieno si rialza e si fionda con un salto verso di te in volo. "

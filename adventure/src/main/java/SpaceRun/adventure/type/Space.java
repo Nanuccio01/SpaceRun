@@ -48,6 +48,11 @@ public class Space {
     return temp;   
     }
     
+    /**
+     * getPersonInSpace() ti permette di vedere il numero degli umani in orbita terrestre 
+     * aggiornato al momento della richiesta.
+     * @return num_person
+     */
     public static String getPersonInSpace() {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://api.open-notify.org");
